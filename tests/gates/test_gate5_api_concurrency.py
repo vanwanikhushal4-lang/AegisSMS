@@ -17,25 +17,24 @@ def test_health_endpoint():
     assert res.json()["status"] == "HEALTHY"
 
 def test_predict_single_sms():
-    payload = {"text": "URGENT: Your bank account will be blocked. Update KYC at http://sbi-kyc.top"}
+    payload = {"text": "Your OTP for HDFC Bank login is 482910. Do not share with anyone."}
     res = client.post("/predict", json=payload)
     assert res.status_code == 200
     data = res.json()
-    assert data["prediction"] == "SMISHING"
-    assert data["risk_level"] == "CRITICAL"
-    assert data["threat_signals"]["has_url"] == True
+    assert data["category"] == "TRANSACTIONAL"
 
 def test_predict_batch_sms():
     payload = {
         "messages": [
-            "Your OTP is 482910. Do not share with anyone.",
-            "50% off on Myntra sale today! Shop now at https://myntra.com/sale",
-            "Dear customer, your electricity will be disconnected tonight. Pay immediately at 9876543210"
+            "Hey bro, are we meeting at 5 PM today?",
+            "An amount of INR 500.00 has been debited from your Kotak Bank A/c X2056 on 31-Aug.",
+            "50% off on all Myntra orders today! Use code FESTIVE50: https://myntra.com/sale"
         ]
     }
     res = client.post("/predict/batch", json=payload)
     assert res.status_code == 200
     results = res.json()["results"]
     assert len(results) == 3
-    assert results[0]["prediction"] == "HAM"
-    assert results[2]["prediction"] == "SMISHING"
+    assert results[0]["category"] == "PERSONAL"
+    assert results[1]["category"] == "TRANSACTIONAL"
+    assert results[2]["category"] == "PROMOTIONAL"

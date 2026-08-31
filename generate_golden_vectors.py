@@ -6,11 +6,11 @@ import numpy as np
 import pandas as pd
 import scipy.sparse as sp
 
-from preprocessing import clean_and_featurize, NUMERIC_FEATURES, LABEL_TO_ID, ID_TO_LABEL
+from preprocessing import clean_and_featurize, NUMERIC_FEATURES, ID_TO_LABEL
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARTIFACT_DIR = os.path.join(BASE_DIR, "artifacts")
-PREP_DIR = os.path.join(BASE_DIR, "prepared_3way")
+PREP_DIR = os.path.join(BASE_DIR, "prepared_intent_3way")
 
 def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_parity_1000.json")):
     with open(os.path.join(ARTIFACT_DIR, "sms_model_3way.pkl"), "rb") as f:
@@ -27,11 +27,11 @@ def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_par
     train_df = pd.read_csv(os.path.join(PREP_DIR, "train.csv"), encoding="utf-8-sig")
 
     sample_pool = pd.concat([test_df, train_df.sample(n=300, random_state=42)], ignore_index=True)
-    sample_pool = sample_pool.drop_duplicates(subset=["TEXT"]).head(1000).reset_index(drop=True)
+    sample_pool = sample_pool.drop_duplicates(subset=["text"]).head(1000).reset_index(drop=True)
 
     records = []
     for idx, row in sample_pool.iterrows():
-        raw_text = str(row["TEXT"])
+        raw_text = str(row["text"])
         cleaned, raw_feats = clean_and_featurize(raw_text)
 
         x_text = vectorizer.transform([cleaned])
@@ -47,19 +47,14 @@ def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_par
             "vector_id": f"GOLDEN_{idx+1:04d}",
             "raw_text": raw_text,
             "cleaned_text": cleaned,
-            "ground_truth_label": str(row.get("LABEL_3WAY", "UNKNOWN")),
-            "predicted_label": ID_TO_LABEL[pred_id],
+            "ground_truth_category": str(row.get("category", "UNKNOWN")).upper(),
+            "predicted_category": ID_TO_LABEL[pred_id],
             "raw_numeric_features": {k: float(raw_feats[k]) for k in NUMERIC_FEATURES},
             "scaled_numeric_features": {k: float(scaled_num[i]) for i, k in enumerate(NUMERIC_FEATURES)},
-            "python_probabilities": {
-                "HAM": float(round(probs[0], 6)),
-                "MARKETING_SPAM": float(round(probs[1], 6)),
-                "SMISHING": float(round(probs[2], 6))
-            },
-            "tflite_probabilities": {
-                "HAM": float(round(probs[0], 6)),
-                "MARKETING_SPAM": float(round(probs[1], 6)),
-                "SMISHING": float(round(probs[2], 6))
+            "probabilities": {
+                "PERSONAL": float(round(probs[0], 6)),
+                "TRANSACTIONAL": float(round(probs[1], 6)),
+                "PROMOTIONAL": float(round(probs[2], 6))
             },
             "max_parity_delta": 0.0
         })

@@ -1,0 +1,28 @@
+{
+  "total_unique_real_messages": 6083,
+  "overall_distribution": {
+    "personal": 4285,
+    "transactional": 958,
+    "promotional": 840
+  },
+  "train_samples": 4257,
+  "val_samples": 911,
+  "test_samples": 915,
+  "train_distribution": {
+    "personal": 2999,
+    "transactional": 670,
+    "promotional": 588
+  },
+  "val_distribution": {
+    "personal": 642,
+    "transactional": 143,
+    "promotional": 126
+  },
+  "test_distribution": {
+    "personal": 644,
+    "transactional": 145,
+    "promotional": 126
+  },
+  "synthetic_used": false,
+  "zero_leakage_verified": true
+}

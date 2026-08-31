@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Shared text cleaning, normalization, and feature engineering for the
-3-Way Multilingual SMS Classifier (HAM, MARKETING_SPAM, SMISHING).
-
-Pure Python standard library implementation with strict cross-platform parity
-specifications for Android / Kotlin integration.
+3-Way SMS Intent Classifier (PERSONAL, TRANSACTIONAL, PROMOTIONAL).
 """
 import re
 import unicodedata
@@ -14,7 +11,7 @@ URL_RE = re.compile(r"(https?://\S+|www\.\S+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/\S*
 PHONE_RE = re.compile(r"(\+?\d[\d\-\s]{8,}\d)")
 ZERO_WIDTH_RE = re.compile(r"[\u200B-\u200D\uFEFF\u200E\u200F\u00AD]")
 
-# 2. Urgency & Threat Keywords (English, Hinglish, Hindi, Marathi)
+# 2. Urgency & Threat Keywords
 URGENCY_KEYWORDS = [
     "urgent", "immediately", "block", "suspend", "verify now", "verify immediately",
     "kyc", "winner", "lucky draw", "claim now", "act now", "penalty",
@@ -30,7 +27,7 @@ URGENCY_KEYWORDS = [
     "खाते बंद", "तात्काळ", "निलंबित केले जाईल", "विद्युत पुरवठा खंडित"
 ]
 
-# 3. Sensitive Credentials / Phishing Keywords (Hallmark of Smishing)
+# 3. Sensitive Credentials / Phishing Keywords
 SENSITIVE_INFO_KEYWORDS = [
     "bank details", "bank account details", "passbook", "account number",
     "share your otp", "share the otp", "send your otp", "share your pin",
@@ -64,14 +61,13 @@ NUMERIC_FEATURES = [
     "sensitive_info_count", "refund_scam_count"
 ]
 
-# 7. 3-Way Label Mapping
+# 7. 3-Way Intent Label Mapping
 LABEL_TO_ID = {
-    "HAM": 0,
-    "MARKETING_SPAM": 1,
-    "SMISHING": 2
+    "PERSONAL": 0,
+    "TRANSACTIONAL": 1,
+    "PROMOTIONAL": 2
 }
 ID_TO_LABEL = {v: k for k, v in LABEL_TO_ID.items()}
-
 
 def normalize_unicode(text: str) -> str:
     if not text:
@@ -80,14 +76,12 @@ def normalize_unicode(text: str) -> str:
     text = ZERO_WIDTH_RE.sub("", text)
     return text
 
-
 def urlwords(url: str) -> str:
     u = url.lower()
     u = re.sub(r"^https?://", "", u)
     u = re.sub(r"^www\.", "", u)
     parts = re.split(r"[^a-z0-9]+", u)
     return " ".join(p for p in parts if p)
-
 
 def clean_and_featurize(text: str):
     text = normalize_unicode(text)

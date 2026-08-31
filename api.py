@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+FastAPI Production Prediction Service for AegisSMS Intent Engine
+Categories: PERSONAL, TRANSACTIONAL, PROMOTIONAL
+"""
 import os
 import json
 import pickle
@@ -24,9 +28,9 @@ mean = np.array(scaler["mean"], dtype=np.float32)
 std = np.array(scaler["std"], dtype=np.float32)
 
 app = FastAPI(
-    title="AegisSMS 3-Way Multilingual Spam & Smishing Engine",
-    version="2.0.0",
-    description="Classifies SMS into HAM (Safe), MARKETING_SPAM (Promotional), and SMISHING (Phishing/Fraud)."
+    title="AegisSMS Multi-Class Intent Engine",
+    version="2.1.0",
+    description="Categorizes SMS messages into PERSONAL, TRANSACTIONAL, and PROMOTIONAL."
 )
 
 class SmsRequest(BaseModel):
@@ -46,33 +50,27 @@ def predict_single(text: str) -> Dict[str, Any]:
     pred_id = int(np.argmax(probs))
     pred_label = ID_TO_LABEL[pred_id]
 
-    risk = "LOW"
-    if pred_label == "SMISHING":
-        risk = "CRITICAL"
-    elif pred_label == "MARKETING_SPAM":
-        risk = "MEDIUM"
-
     return {
         "text": text,
-        "prediction": pred_label,
-        "risk_level": risk,
+        "category": pred_label,
+        "confidence": float(round(probs[pred_id], 4)),
         "probabilities": {
-            "HAM": float(round(probs[0], 4)),
-            "MARKETING_SPAM": float(round(probs[1], 4)),
-            "SMISHING": float(round(probs[2], 4))
+            "PERSONAL": float(round(probs[0], 4)),
+            "TRANSACTIONAL": float(round(probs[1], 4)),
+            "PROMOTIONAL": float(round(probs[2], 4))
         },
-        "threat_signals": {
+        "signals": {
             "has_url": bool(raw_feats["has_url"] > 0),
             "has_phone": bool(raw_feats["has_phone"] > 0),
             "urgency_detected": bool(raw_feats["urgency_count"] > 0),
             "credentials_requested": bool(raw_feats["sensitive_info_count"] > 0),
-            "refund_scam_detected": bool(raw_feats["refund_scam_count"] > 0)
+            "refund_phrases": bool(raw_feats["refund_scam_count"] > 0)
         }
     }
 
 @app.get("/health")
 def health_check():
-    return {"status": "HEALTHY", "model_version": "2.0.0-3WAY"}
+    return {"status": "HEALTHY", "model_version": "2.1.0-INTENT"}
 
 @app.post("/predict")
 def predict_sms_endpoint(req: SmsRequest):

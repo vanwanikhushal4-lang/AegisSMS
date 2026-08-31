@@ -1,60 +1,48 @@
 {
-  "model_version": "2.0.0-3WAY",
-  "test_accuracy": 0.9619377162629758,
-  "classes": [
-    "HAM",
-    "MARKETING_SPAM",
-    "SMISHING"
+  "model_version": "2.1.0-INTENT",
+  "taxonomy": [
+    "PERSONAL",
+    "TRANSACTIONAL",
+    "PROMOTIONAL"
   ],
+  "dataset_type": "100% Real Indian SMS + User Curated Dataset",
+  "synthetic_used": false,
+  "test_accuracy": 0.9103825136612022,
   "class_metrics": {
-    "HAM": {
-      "precision": 0.9863387978142076,
-      "recall": 0.9944903581267218,
-      "f1": 0.99039780521262,
-      "support": 726
+    "PERSONAL": {
+      "precision": 0.9166666666666666,
+      "recall": 0.9906832298136646,
+      "f1": 0.9522388059701492,
+      "support": 644
     },
-    "MARKETING_SPAM": {
-      "precision": 0.7846153846153846,
-      "recall": 0.7391304347826086,
-      "f1": 0.7611940298507462,
-      "support": 69
+    "TRANSACTIONAL": {
+      "precision": 0.8679245283018868,
+      "recall": 0.6344827586206897,
+      "f1": 0.7330677290836654,
+      "support": 145
     },
-    "SMISHING": {
-      "precision": 0.8714285714285714,
-      "recall": 0.8472222222222222,
-      "f1": 0.8591549295774648,
-      "support": 72,
-      "recall_95_ci": [
-        0.7467771063249945,
-        0.9124929127052431
-      ]
+    "PROMOTIONAL": {
+      "precision": 0.911504424778761,
+      "recall": 0.8174603174603174,
+      "f1": 0.8619246861924686,
+      "support": 126
     }
   },
-  "ham_false_positive_rate": 0.005509641873278237,
-  "ham_fpr_95_ci": [
-    0.0021446162338394836,
-    0.014080083908336613
-  ],
   "confusion_matrix": [
     [
-      722,
-      3,
-      1
+      638,
+      6,
+      0
     ],
     [
-      10,
-      51,
-      8
+      43,
+      92,
+      10
     ],
     [
-      0,
-      11,
-      61
+      15,
+      8,
+      103
     ]
-  ],
-  "quality_gates": {
-    "smishing_recall_ge_85": false,
-    "smishing_precision_ge_85": true,
-    "ham_fpr_lt_1_0_pct": true
-  }
+  ]
 }

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Interactive CLI for live testing raw SMS texts against AegisSMS 3-Way Engine.
+Interactive CLI for live testing SMS intent categorization (PERSONAL, TRANSACTIONAL, PROMOTIONAL).
 Usage:
     python interactive_predict.py "Your message here"
 """
@@ -11,7 +11,6 @@ import pickle
 import numpy as np
 import scipy.sparse as sp
 
-# Set UTF-8 stdout for Windows consoles
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -44,18 +43,17 @@ def predict_text(text: str):
     print("\n" + "="*70)
     print(f"INPUT SMS: {text}")
     print("="*70)
-    print(f"VERDICT:     {pred_label}")
+    print(f"CATEGORY:    {pred_label}")
     print(f"CONFIDENCE:  {probs[pred_id]*100:.2f}%\n")
-    print("PROBABILITY DISTRIBUTION:")
-    print(f"  [HAM]            (Safe/Legitimate):  {probs[0]*100:6.2f}%")
-    print(f"  [MARKETING_SPAM] (Promo/Broadcast):  {probs[1]*100:6.2f}%")
-    print(f"  [SMISHING]       (Phishing/Threat):  {probs[2]*100:6.2f}%\n")
-    print("EXTRACTED THREAT SIGNALS:")
+    print("INTENT PROBABILITIES:")
+    print(f"  [PERSONAL]      (Peer-to-peer / Chat):    {probs[0]*100:6.2f}%")
+    print(f"  [TRANSACTIONAL] (Banking / OTP / Alerts): {probs[1]*100:6.2f}%")
+    print(f"  [PROMOTIONAL]   (Offers / Sales / Ads):   {probs[2]*100:6.2f}%\n")
+    print("EXTRACTED SIGNALS:")
     print(f"  - Has URL:              {bool(raw_feats['has_url'] > 0)}")
     print(f"  - Has Phone:            {bool(raw_feats['has_phone'] > 0)}")
     print(f"  - Urgency Verbs:        {int(raw_feats['urgency_count'])}")
     print(f"  - Credential Keywords:  {int(raw_feats['sensitive_info_count'])}")
-    print(f"  - Refund Scam Phrases:  {int(raw_feats['refund_scam_count'])}")
     print("="*70 + "\n")
 
 if __name__ == "__main__":
@@ -63,4 +61,4 @@ if __name__ == "__main__":
         msg = " ".join(sys.argv[1:])
         predict_text(msg)
     else:
-        print("Please provide a text string: python interactive_predict.py \"SMS text\"")
+        print('Please provide a text string: python interactive_predict.py "SMS text"')
