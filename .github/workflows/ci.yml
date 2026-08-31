@@ -13,36 +13,36 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up Python 3.11
+    - name: "Set up Python 3.11"
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
-    - name: Set up JDK 17
+    - name: "Set up JDK 17"
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Install dependencies
+    - name: "Install dependencies"
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Gate 1: Zero Data & Template-Family Leakage Verification
+    - name: "Gate 1 - Zero Data and Template-Family Leakage Verification"
       run: pytest tests/gates/test_gate1_leakage.py -v
 
-    - name: Gate 2: Quality Gates & Live Model Execution Metrics
+    - name: "Gate 2 - Quality Gates and Live Model Execution Metrics"
       run: pytest tests/gates/test_gate2_metrics.py -v
 
-    - name: Gate 3: 1,000 Golden Parity Vectors Verification (JVM Execution)
+    - name: "Gate 3 - 1000 Golden Parity Vectors Verification (JVM Execution)"
       run: pytest tests/gates/test_gate3_parity.py -v
 
-    - name: Gate 4: Provenance Manifest & SHA-256 Hashes Verification
+    - name: "Gate 4 - Provenance Manifest and SHA-256 Hashes Verification"
       run: pytest tests/gates/test_gate4_provenance_and_hashes.py -v
 
-    - name: Gate 5: API & Concurrency Tests
+    - name: "Gate 5 - API and Concurrency Tests"
       run: pytest tests/gates/test_gate5_api_concurrency.py -v
 
-    - name: Adversarial & Obfuscation Robustness Suite
+    - name: "Adversarial and Obfuscation Robustness Suite"
       run: pytest tests/test_adversarial.py -v
