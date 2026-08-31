@@ -11,6 +11,10 @@ import pickle
 import numpy as np
 import scipy.sparse as sp
 
+# Set UTF-8 stdout for Windows consoles
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARTIFACT_DIR = os.path.join(BASE_DIR, "artifacts")
 
@@ -43,9 +47,9 @@ def predict_text(text: str):
     print(f"VERDICT:     {pred_label}")
     print(f"CONFIDENCE:  {probs[pred_id]*100:.2f}%\n")
     print("PROBABILITY DISTRIBUTION:")
-    print(f"  🟢 HAM (Legitimate):         {probs[0]*100:6.2f}%")
-    print(f"  🟡 MARKETING SPAM (Promo):   {probs[1]*100:6.2f}%")
-    print(f"  🔴 SMISHING (Phishing/Fraud): {probs[2]*100:6.2f}%\n")
+    print(f"  [HAM]            (Safe/Legitimate):  {probs[0]*100:6.2f}%")
+    print(f"  [MARKETING_SPAM] (Promo/Broadcast):  {probs[1]*100:6.2f}%")
+    print(f"  [SMISHING]       (Phishing/Threat):  {probs[2]*100:6.2f}%\n")
     print("EXTRACTED THREAT SIGNALS:")
     print(f"  - Has URL:              {bool(raw_feats['has_url'] > 0)}")
     print(f"  - Has Phone:            {bool(raw_feats['has_phone'] > 0)}")
