@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Interactive CLI for live testing SMS intent categorization (PERSONAL, TRANSACTIONAL, PROMOTIONAL).
+Interactive CLI for live testing 4-Way SMS classification (PERSONAL, TRANSACTIONAL, PROMOTIONAL, SCAM).
 Usage:
     python interactive_predict.py "Your message here"
 """
@@ -40,20 +40,29 @@ def predict_text(text: str):
     pred_id = int(np.argmax(probs))
     pred_label = ID_TO_LABEL[pred_id]
 
+    category_badge = {
+        "PERSONAL": "🟢 PERSONAL (Peer-to-peer / Chat)",
+        "TRANSACTIONAL": "🔵 TRANSACTIONAL (Banking / OTP / Alerts)",
+        "PROMOTIONAL": "🟡 PROMOTIONAL (Offers / Sales / Ads)",
+        "SCAM": "🚨 SCAM / PHISHING (Malicious / Fraud Threat)"
+    }.get(pred_label, pred_label)
+
     print("\n" + "="*70)
     print(f"INPUT SMS: {text}")
     print("="*70)
-    print(f"CATEGORY:    {pred_label}")
+    print(f"VERDICT:     {category_badge}")
     print(f"CONFIDENCE:  {probs[pred_id]*100:.2f}%\n")
-    print("INTENT PROBABILITIES:")
-    print(f"  [PERSONAL]      (Peer-to-peer / Chat):    {probs[0]*100:6.2f}%")
-    print(f"  [TRANSACTIONAL] (Banking / OTP / Alerts): {probs[1]*100:6.2f}%")
-    print(f"  [PROMOTIONAL]   (Offers / Sales / Ads):   {probs[2]*100:6.2f}%\n")
+    print("4-WAY PROBABILITIES:")
+    print(f"  🟢 [PERSONAL]      (Peer-to-peer / Chat):    {probs[0]*100:6.2f}%")
+    print(f"  🔵 [TRANSACTIONAL] (Banking / OTP / Alerts): {probs[1]*100:6.2f}%")
+    print(f"  🟡 [PROMOTIONAL]   (Offers / Sales / Ads):   {probs[2]*100:6.2f}%")
+    print(f"  🚨 [SCAM]          (Phishing / Fraud):       {probs[3]*100:6.2f}%\n")
     print("EXTRACTED SIGNALS:")
     print(f"  - Has URL:              {bool(raw_feats['has_url'] > 0)}")
     print(f"  - Has Phone:            {bool(raw_feats['has_phone'] > 0)}")
     print(f"  - Urgency Verbs:        {int(raw_feats['urgency_count'])}")
     print(f"  - Credential Keywords:  {int(raw_feats['sensitive_info_count'])}")
+    print(f"  - Refund Keywords:      {int(raw_feats['refund_scam_count'])}")
     print("="*70 + "\n")
 
 if __name__ == "__main__":

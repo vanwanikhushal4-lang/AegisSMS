@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Shared text cleaning, normalization, and feature engineering for the
-3-Way SMS Intent Classifier (PERSONAL, TRANSACTIONAL, PROMOTIONAL).
+4-Way SMS Intent & Threat Engine (PERSONAL, TRANSACTIONAL, PROMOTIONAL, SCAM).
 """
 import re
 import unicodedata
@@ -54,7 +54,7 @@ REFUND_SCAM_KEYWORDS = [
 ]
 
 # 5. Currency Markers
-CURRENCY_MARKERS = ["rs.", "rs ", "₹", "inr", "$", "eur", "usd"]
+CURRENCY_MARKERS = ["rs.", "rs ", "₹", "inr", "$", "eur", "usd", "£"]
 
 # 6. Feature List
 NUMERIC_FEATURES = [
@@ -63,11 +63,12 @@ NUMERIC_FEATURES = [
     "sensitive_info_count", "refund_scam_count"
 ]
 
-# 7. 3-Way Intent Label Mapping
+# 7. 4-Way Intent & Threat Label Mapping
 LABEL_TO_ID = {
     "PERSONAL": 0,
     "TRANSACTIONAL": 1,
-    "PROMOTIONAL": 2
+    "PROMOTIONAL": 2,
+    "SCAM": 3
 }
 ID_TO_LABEL = {v: k for k, v in LABEL_TO_ID.items()}
 

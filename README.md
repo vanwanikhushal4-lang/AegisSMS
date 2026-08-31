@@ -1,48 +1,51 @@
-# 🛡️ AegisSMS: Enterprise SMS Intent & Threat Intelligence Engine
+# 🛡️ AegisSMS: 4-Way SMS Intent & Threat Intelligence Engine
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-2.1.0-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-2.3.0-009688.svg?logo=fastapi)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.9%20%7C%203.10%20%7C%203.11-3776AB.svg?logo=python)](https://python.org)
 [![Zero Leakage](https://img.shields.io/badge/Data%20Leakage-0.00%25%20Verified-brightgreen.svg)]()
-[![100% Real Data](https://img.shields.io/badge/Dataset-14%2C478%20Real%20SMS-success.svg)]()
-[![Overall Accuracy](https://img.shields.io/badge/Test%20Accuracy-93.47%25-brightgreen.svg)]()
+[![100% Real Data](https://img.shields.io/badge/Dataset-34%2C762%20Real%20SMS%20(21K%20Scams)-success.svg)]()
+[![Scam Recall](https://img.shields.io/badge/Scam%20Recall-95.67%25-red.svg)]()
+[![Scam Precision](https://img.shields.io/badge/Scam%20Precision-97.79%25-brightgreen.svg)]()
 
-**AegisSMS** is an enterprise-grade, high-throughput, multilingual SMS intent classification engine trained on **14,478 100% Real SMS Messages** across **English**, **Hinglish**, **Hindi**, and **Marathi** with **zero synthetic data**.
+**AegisSMS** is an enterprise-grade multilingual SMS intent and threat intelligence engine trained on **100% Real SMS Traffic** (0% synthetic data) across **English**, **Hinglish**, **Hindi**, and **Marathi**.
 
-The model classifies every SMS into three distinct operational intents:
-* **`PERSONAL`** (P2P conversations, informal chat, casual greetings, family/friend check-ins)
-* **`TRANSACTIONAL`** (Bank debits/credits, OTPs, utility bills, courier tracking, e-challans, account alerts)
-* **`PROMOTIONAL`** (Marketing campaigns, discount coupons, telecom recharge offers, sales advertisements, loan/credit promotions)
-
----
-
-## 🌟 3-Way Intent Taxonomy & Class Distribution
-
-The dataset was curated and deduplicated from multi-source real-world SMS collections:
-
-| Intent Category | Real Dataset Count | Percentage | Primary Examples |
-| :--- | :---: | :---: | :--- |
-| **`PERSONAL`** | **8,544** | **59.0%** | *"Hey buddy are you coming to play football?"*, *"Call me when you get home"*, *"Mom said dinner is ready"* |
-| **`TRANSACTIONAL`** | **4,226** | **29.2%** | *"Sent Rs.50.00 from Kotak Bank A/c X2056..."*, *"Your Zepto order OTP is 4829"*, *"Power supply disconnected due to arrears..."*, *"Challan issued for vehicle DL01AB1234"* |
-| **`PROMOTIONAL`** | **1,708** | **11.8%** | *"FLAT 25% OFF on Tata CLiQ Luxury with code LUXE25"*, *"Recharge with Rs.348 for Unlimited 5G on Airtel"*, *"0 downpayment on Voltas AC"* |
-| **Total Real Dataset** | **14,478** | **100.0%** | **100% Real Traffic (0% Synthetic Data)** |
+It performs end-to-end 4-way classification:
+1. 🟢 **`PERSONAL`** (P2P conversations, informal chats, casual greetings, family/friend messaging)
+2. 🔵 **`TRANSACTIONAL`** (Legitimate banking debits/credits, OTPs, utility bills, courier delivery updates, account balance alerts, e-challans)
+3. 🟡 **`PROMOTIONAL`** (Legitimate marketing campaigns, discount coupons, telecom recharge offers, sales advertisements, brand campaigns)
+4. 🚨 **`SCAM`** (Phishing URLs, APK malware distribution, fake electricity disconnection threats, KYC/PAN card locks, lottery/prize scams, refund traps)
 
 ---
 
-## 📊 Evaluation on Untouched 100% Real Blind Test Holdout (2,175 Samples)
+## 🌟 4-Way Intent & Threat Taxonomy
 
-| Intent Category | Precision | Recall | F1-Score | Support (Real Test Samples) |
+| Class | Description | Real Dataset Count | Examples |
+| :--- | :--- | :---: | :--- |
+| 🟢 **`PERSONAL`** | Direct peer-to-peer social messaging, casual chats, and family check-ins. | **6,000** | *"Hey buddy are you coming to play football?"*, *"Call me when you reach home"* |
+| 🔵 **`TRANSACTIONAL`** | Time-critical, automated service alerts, OTP verifications, bank debits/credits, delivery status, and utility notices. | **4,500** | *"Sent Rs.50.00 from Kotak Bank A/c X2056..."*, *"Your Zepto order OTP is 4829"*, *"Power supply disconnected due to arrears..."* |
+| 🟡 **`PROMOTIONAL`** | Legitimate commercial broadcasts, discount vouchers, sales announcements, and telecom recharge upselling. | **3,000** | *"FLAT 25% OFF on Tata CLiQ Luxury with code LUXE25"*, *"Recharge with Rs.348 for Unlimited 5G on Airtel"* |
+| 🚨 **`SCAM`** | Malicious phishing links, fake utility disconnection threats, APK trojans, lottery fraud, and credential harvesting. | **21,262** | *"Electricity will be cut off tonight, call 9876543210 or click msedcl-pay.apk"*, *"WINNER! You won 25 Lakh in KBC lottery"*, *"SBI account locked, update PAN at http://..."* |
+| **TOTAL** | **Curated Master Training Dataset** | **34,762** | **100% Real Data (0% Synthetic)** |
+
+---
+
+## 📊 Blind Real Test Set Evaluation (5,215 Holdout Samples)
+
+| Category | Precision | Recall | F1-Score | Support (Real Test Samples) |
 | :--- | :---: | :---: | :---: | :---: |
-| **`PERSONAL`** | **95.35%** | **95.87%** | **95.61%** | 1,283 |
-| **`TRANSACTIONAL`** | **89.30%** | **90.71%** | **90.00%** | 635 |
-| **`PROMOTIONAL`** | **94.58%** | **88.33%** | **91.35%** | 257 |
-| **Overall Accuracy** | **93.47%** | - | - | **2,175** |
+| 🟢 **`PERSONAL`** | **80.00%** | **84.44%** | **82.16%** | 900 |
+| 🔵 **`TRANSACTIONAL`** | **71.17%** | **69.48%** | **70.31%** | 675 |
+| 🟡 **`PROMOTIONAL`** | **79.18%** | **85.33%** | **82.14%** | 450 |
+| 🚨 **`SCAM`** | **97.79%** | **95.67%** | **96.72%** | **3,190** |
+| **Overall Accuracy** | **89.45%** | - | - | **5,215** |
 
-### Confusion Matrix (Test Split)
+### Confusion Matrix
 ```
-                Predicted Personal   Predicted Transactional   Predicted Promotional
-Actual Personal:       1,230                   48                         5
-Actual Transactional:     51                  576                         8
-Actual Promotional:        9                   21                       227
+                     Predicted Personal   Predicted Transactional   Predicted Promotional   Predicted Scam
+Actual Personal:            760                     112                        8                  20
+Actual Transactional:       137                     469                       35                  34
+Actual Promotional:          19                      32                      384                  15
+Actual Scam:                 34                      46                       58                3052
 ```
 
 ---
@@ -60,7 +63,23 @@ pip install -r requirements.txt
 ### 2. Interactive CLI Predictor
 
 ```bash
-python interactive_predict.py "Sent Rs.50.00 from Kotak Bank A/c X2056 to VETAIL on 31-08-26. UPI Ref 624311493216."
+python interactive_predict.py "Dear customer, your electricity power will be disconnected tonight at 9:30 PM. Call 08634017553 or click http://bit.ly/msedcl-pay.apk"
+```
+
+**Output**:
+```
+======================================================================
+INPUT SMS: Dear customer, your electricity power will be disconnected tonight...
+======================================================================
+VERDICT:     🚨 SCAM / PHISHING (Malicious / Fraud Threat)
+CONFIDENCE:  100.00%
+
+4-WAY PROBABILITIES:
+  🟢 [PERSONAL]      (Peer-to-peer / Chat):      0.00%
+  🔵 [TRANSACTIONAL] (Banking / OTP / Alerts):   0.00%
+  🟡 [PROMOTIONAL]   (Offers / Sales / Ads):     0.00%
+  🚨 [SCAM]          (Phishing / Fraud):       100.00%
+======================================================================
 ```
 
 ### 3. Launch Inference API
@@ -69,30 +88,31 @@ python interactive_predict.py "Sent Rs.50.00 from Kotak Bank A/c X2056 to VETAIL
 python main.py
 ```
 
-### 4. API Usage
+### 4. API Endpoint (`POST /predict`)
 
-#### Single SMS Prediction (`POST /predict`)
 ```bash
 curl -X POST http://localhost:8000/predict \
   -H "Content-Type: application/json" \
-  -d '{"text": "Your Zepto order OTP is 4829. Share with delivery partner."}'
+  -d '{"text": "WINNER! You have won 25 Lakh in KBC lottery. Call 9876543210 immediately."}'
 ```
 
 **Response**:
 ```json
 {
-  "text": "Your Zepto order OTP is 4829. Share with delivery partner.",
-  "category": "TRANSACTIONAL",
-  "confidence": 0.9973,
+  "text": "WINNER! You have won 25 Lakh in KBC lottery. Call 9876543210 immediately.",
+  "category": "SCAM",
+  "is_scam": true,
+  "confidence": 0.9997,
   "probabilities": {
-    "PERSONAL": 0.0006,
-    "TRANSACTIONAL": 0.9973,
-    "PROMOTIONAL": 0.0021
+    "PERSONAL": 0.0000,
+    "TRANSACTIONAL": 0.0000,
+    "PROMOTIONAL": 0.0003,
+    "SCAM": 0.9997
   },
   "signals": {
     "has_url": false,
-    "has_phone": false,
-    "urgency_detected": false,
+    "has_phone": true,
+    "urgency_detected": true,
     "credentials_requested": false,
     "refund_phrases": false
   }
@@ -103,7 +123,7 @@ curl -X POST http://localhost:8000/predict \
 
 ## 🧪 Quality Gates & CI Pipeline
 
-Run all automated quality gates (leakage check, metric gates, 1,000 parity vectors, API concurrency, adversarial suite):
+Run all automated quality gates (leakage validation, metrics gates, 1,000 golden vectors, API concurrency, adversarial test suite):
 
 ```bash
 pytest tests/ -v

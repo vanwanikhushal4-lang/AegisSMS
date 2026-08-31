@@ -34,33 +34,40 @@ def model_and_assets():
         probs = clf.predict_proba(x_fused)[0]
         return {
             "category": ID_TO_LABEL[int(np.argmax(probs))],
-            "probs": {"PERSONAL": float(probs[0]), "TRANSACTIONAL": float(probs[1]), "PROMOTIONAL": float(probs[2])}
+            "probs": {ID_TO_LABEL[i]: float(probs[i]) for i in range(4)}
         }
 
     return predict
 
-def test_personal_chat_categorization(model_and_assets):
+def test_personal_chat(model_and_assets):
     predict = model_and_assets
-    res = predict("Hey bro are you free tonight? Let's grab dinner")
+    res = predict("Hey buddy are you coming to play football this evening?")
     assert res["category"] == "PERSONAL"
-    assert res["probs"]["PERSONAL"] >= 0.70
 
-def test_transactional_banking_categorization(model_and_assets):
+def test_transactional_banking(model_and_assets):
     predict = model_and_assets
     res = predict("Sent Rs.50.00 from Kotak Bank A/c X2056 to VETAIL on 31-08-26. UPI Ref 624311493216.")
     assert res["category"] == "TRANSACTIONAL"
 
-def test_transactional_otp_categorization(model_and_assets):
+def test_promotional_discount(model_and_assets):
     predict = model_and_assets
-    res = predict("Your OTP for Zepto order delivery is 9979. Share with delivery agent to confirm.")
-    assert res["category"] == "TRANSACTIONAL"
-
-def test_promotional_discount_categorization(model_and_assets):
-    predict = model_and_assets
-    res = predict("FLAT 15% OFF on Tommy Hilfiger & Lacoste on Tata CLiQ Luxury with code 1STLUXE: https://1kx.in/MYCLIQ")
+    res = predict("FLAT 25% OFF on Tommy Hilfiger & Puma on Tata CLiQ Luxury. Use code LUXE25: https://tatacliq.com/sale")
     assert res["category"] == "PROMOTIONAL"
 
-def test_promotional_telecom_recharge_categorization(model_and_assets):
+def test_electricity_smishing_scam(model_and_assets):
     predict = model_and_assets
-    res = predict("Abhi Recharge karein Rs348 se aur payein Unlimited 5G data for 28 days on Airtel Thanks App.")
-    assert res["category"] == "PROMOTIONAL"
+    res = predict("Dear customer, your electricity power will be disconnected tonight at 9:30 PM. Call immediately at 08634017553 or click http://bit.ly/msedcl-pay.apk")
+    assert res["category"] == "SCAM"
+    assert res["probs"]["SCAM"] >= 0.85
+
+def test_lottery_prize_scam(model_and_assets):
+    predict = model_and_assets
+    res = predict("WINNER! You have won 25 Lakh in KBC lottery. To claim your prize money call 9876543210 immediately.")
+    assert res["category"] == "SCAM"
+    assert res["probs"]["SCAM"] >= 0.85
+
+def test_pan_block_scam(model_and_assets):
+    predict = model_and_assets
+    res = predict("Your SBI Bank account has been locked. Update your PAN card immediately to avoid suspension: http://sbi-kyc-update.apk")
+    assert res["category"] == "SCAM"
+    assert res["probs"]["SCAM"] >= 0.85

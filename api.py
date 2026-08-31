@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-FastAPI Production Prediction Service for AegisSMS Intent Engine
-Categories: PERSONAL, TRANSACTIONAL, PROMOTIONAL
+FastAPI Production Prediction Service for AegisSMS 4-Way Intent & Threat Engine
+Categories: PERSONAL, TRANSACTIONAL, PROMOTIONAL, SCAM
 """
 import os
 import json
@@ -28,9 +28,9 @@ mean = np.array(scaler["mean"], dtype=np.float32)
 std = np.array(scaler["std"], dtype=np.float32)
 
 app = FastAPI(
-    title="AegisSMS Multi-Class Intent Engine",
-    version="2.1.0",
-    description="Categorizes SMS messages into PERSONAL, TRANSACTIONAL, and PROMOTIONAL."
+    title="AegisSMS 4-Way Intent & Threat Intelligence Engine",
+    version="2.3.0",
+    description="Classifies SMS into PERSONAL, TRANSACTIONAL, PROMOTIONAL, and SCAM."
 )
 
 class SmsRequest(BaseModel):
@@ -50,14 +50,18 @@ def predict_single(text: str) -> Dict[str, Any]:
     pred_id = int(np.argmax(probs))
     pred_label = ID_TO_LABEL[pred_id]
 
+    is_scam = bool(pred_label == "SCAM" or probs[3] >= 0.40)
+
     return {
         "text": text,
         "category": pred_label,
+        "is_scam": is_scam,
         "confidence": float(round(probs[pred_id], 4)),
         "probabilities": {
             "PERSONAL": float(round(probs[0], 4)),
             "TRANSACTIONAL": float(round(probs[1], 4)),
-            "PROMOTIONAL": float(round(probs[2], 4))
+            "PROMOTIONAL": float(round(probs[2], 4)),
+            "SCAM": float(round(probs[3], 4))
         },
         "signals": {
             "has_url": bool(raw_feats["has_url"] > 0),
@@ -70,7 +74,7 @@ def predict_single(text: str) -> Dict[str, Any]:
 
 @app.get("/health")
 def health_check():
-    return {"status": "HEALTHY", "model_version": "2.1.0-INTENT"}
+    return {"status": "HEALTHY", "model_version": "2.3.0-4WAY-SCAM"}
 
 @app.post("/predict")
 def predict_sms_endpoint(req: SmsRequest):

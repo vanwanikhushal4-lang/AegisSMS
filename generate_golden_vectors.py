@@ -10,7 +10,7 @@ from preprocessing import clean_and_featurize, NUMERIC_FEATURES, ID_TO_LABEL
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARTIFACT_DIR = os.path.join(BASE_DIR, "artifacts")
-PREP_DIR = os.path.join(BASE_DIR, "prepared_14k")
+PREP_DIR = os.path.join(BASE_DIR, "prepared_4way_scam")
 
 def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_parity_1000.json")):
     with open(os.path.join(ARTIFACT_DIR, "sms_model_3way.pkl"), "rb") as f:
@@ -54,7 +54,8 @@ def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_par
             "probabilities": {
                 "PERSONAL": float(round(probs[0], 6)),
                 "TRANSACTIONAL": float(round(probs[1], 6)),
-                "PROMOTIONAL": float(round(probs[2], 6))
+                "PROMOTIONAL": float(round(probs[2], 6)),
+                "SCAM": float(round(probs[3], 6))
             },
             "max_parity_delta": 0.0
         })

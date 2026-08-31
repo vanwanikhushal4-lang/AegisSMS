@@ -1,62 +1,83 @@
 {
-  "model_version": "2.2.0-14K-REAL",
+  "model_version": "2.3.0-4WAY-SCAM",
   "taxonomy": [
     "PERSONAL",
     "TRANSACTIONAL",
-    "PROMOTIONAL"
+    "PROMOTIONAL",
+    "SCAM"
   ],
-  "dataset_size": 14478,
-  "test_samples": 2175,
-  "dataset_type": "100% Real SMS Traffic (14,478 Unique Real Messages)",
+  "dataset_size": 34762,
+  "scam_samples_in_dataset": 21262,
+  "test_samples": 5215,
+  "dataset_type": "100% Real SMS Traffic (0% Synthetic)",
   "synthetic_used": false,
-  "test_accuracy": 0.9347126436781609,
+  "test_accuracy": 0.8945349952061361,
   "class_metrics": {
     "PERSONAL": {
-      "precision": 0.9534883720930233,
-      "recall": 0.9586905689789555,
-      "f1": 0.9560823940924991,
-      "support": 1283,
+      "precision": 0.8,
+      "recall": 0.8444444444444444,
+      "f1": 0.8216216216216217,
+      "support": 900,
       "recall_95_ci": [
-        0.9463624130083951,
-        0.968280173249778
+        0.8193070177824187,
+        0.8666539922479884
       ]
     },
     "TRANSACTIONAL": {
-      "precision": 0.8930232558139535,
-      "recall": 0.9070866141732283,
-      "f1": 0.9,
-      "support": 635,
+      "precision": 0.7116843702579666,
+      "recall": 0.6948148148148148,
+      "f1": 0.7031484257871065,
+      "support": 675,
       "recall_95_ci": [
-        0.8819939885703426,
-        0.927283482172376
+        0.6590546674888543,
+        0.7283701083297769
       ]
     },
     "PROMOTIONAL": {
-      "precision": 0.9458333333333333,
-      "recall": 0.8832684824902723,
-      "f1": 0.9134808853118712,
-      "support": 257,
+      "precision": 0.7917525773195876,
+      "recall": 0.8533333333333334,
+      "f1": 0.8213903743315508,
+      "support": 450,
       "recall_95_ci": [
-        0.8382500462866237,
-        0.9169979917003912
+        0.8176577335906272,
+        0.8830274810795403
+      ]
+    },
+    "SCAM": {
+      "precision": 0.9778917013777635,
+      "recall": 0.9567398119122257,
+      "f1": 0.9672001267627951,
+      "support": 3190,
+      "recall_95_ci": [
+        0.9491135273755981,
+        0.9632673899527079
       ]
     }
   },
   "confusion_matrix": [
     [
-      1230,
-      48,
-      5
+      760,
+      112,
+      8,
+      20
     ],
     [
-      51,
-      576,
-      8
+      137,
+      469,
+      35,
+      34
     ],
     [
-      9,
-      21,
-      227
+      19,
+      32,
+      384,
+      15
+    ],
+    [
+      34,
+      46,
+      58,
+      3052
     ]
   ]
 }

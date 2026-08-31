@@ -4,7 +4,7 @@ import json
 import pandas as pd
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-PREP_DIR = os.path.join(BASE_DIR, "prepared_14k")
+PREP_DIR = os.path.join(BASE_DIR, "prepared_4way_scam")
 
 def test_gate1_zero_data_leakage():
     train_df = pd.read_csv(os.path.join(PREP_DIR, "train.csv"), encoding="utf-8-sig")
