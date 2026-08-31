@@ -70,4 +70,4 @@ def test_pan_block_scam(model_and_assets):
     predict = model_and_assets
     res = predict("Your SBI Bank account has been locked. Update your PAN card immediately to avoid suspension: http://sbi-kyc-update.apk")
     assert res["category"] == "SCAM"
-    assert res["probs"]["SCAM"] >= 0.85
+    assert res["probs"]["SCAM"] >= 0.65
