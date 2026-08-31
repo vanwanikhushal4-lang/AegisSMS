@@ -10,7 +10,7 @@ from preprocessing import clean_and_featurize, NUMERIC_FEATURES, ID_TO_LABEL
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARTIFACT_DIR = os.path.join(BASE_DIR, "artifacts")
-PREP_DIR = os.path.join(BASE_DIR, "prepared_intent_3way")
+PREP_DIR = os.path.join(BASE_DIR, "prepared_14k")
 
 def generate_golden_dataset(output_path = os.path.join(ARTIFACT_DIR, "golden_parity_1000.json")):
     with open(os.path.join(ARTIFACT_DIR, "sms_model_3way.pkl"), "rb") as f:

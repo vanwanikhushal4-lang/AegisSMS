@@ -21,6 +21,8 @@ URGENCY_KEYWORDS = [
     "connection will be", "pending verification", "meter verification",
     "service will be", "ready for transfer", "final notice", "account locked",
     "pay immediately", "disconnect tonight", "call immediately",
+    "pending challan", "challan", "legal action", "court notice", "traffic fine",
+    "parivahan", "avoid legal action", "penalty",
     "तुरंत", "ब्लॉक हो जाएगा", "सत्यापित करें", "जीत चुका", "केवाईसी",
     "निलंबित", "अभी वेरीफाई", "अभिनंदन! आप", "लगेच केवायसी",
     "समाप्त कर दिया जाएगा", "बंद केले जाईल", "काट दी जाएगी",

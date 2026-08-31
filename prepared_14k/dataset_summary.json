@@ -1,0 +1,28 @@
+{
+  "total_unique_real_messages": 14478,
+  "overall_distribution": {
+    "PERSONAL": 8544,
+    "TRANSACTIONAL": 4226,
+    "PROMOTIONAL": 1708
+  },
+  "train_samples": 10133,
+  "val_samples": 2170,
+  "test_samples": 2175,
+  "train_distribution": {
+    "PERSONAL": 5980,
+    "TRANSACTIONAL": 2958,
+    "PROMOTIONAL": 1195
+  },
+  "val_distribution": {
+    "PERSONAL": 1281,
+    "TRANSACTIONAL": 633,
+    "PROMOTIONAL": 256
+  },
+  "test_distribution": {
+    "PERSONAL": 1283,
+    "TRANSACTIONAL": 635,
+    "PROMOTIONAL": 257
+  },
+  "synthetic_used": false,
+  "zero_leakage_verified": true
+}

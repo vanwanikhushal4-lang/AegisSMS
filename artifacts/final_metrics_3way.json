@@ -1,48 +1,62 @@
 {
-  "model_version": "2.1.0-INTENT",
+  "model_version": "2.2.0-14K-REAL",
   "taxonomy": [
     "PERSONAL",
     "TRANSACTIONAL",
     "PROMOTIONAL"
   ],
-  "dataset_type": "100% Real Indian SMS + User Curated Dataset",
+  "dataset_size": 14478,
+  "test_samples": 2175,
+  "dataset_type": "100% Real SMS Traffic (14,478 Unique Real Messages)",
   "synthetic_used": false,
-  "test_accuracy": 0.9103825136612022,
+  "test_accuracy": 0.9347126436781609,
   "class_metrics": {
     "PERSONAL": {
-      "precision": 0.9166666666666666,
-      "recall": 0.9906832298136646,
-      "f1": 0.9522388059701492,
-      "support": 644
+      "precision": 0.9534883720930233,
+      "recall": 0.9586905689789555,
+      "f1": 0.9560823940924991,
+      "support": 1283,
+      "recall_95_ci": [
+        0.9463624130083951,
+        0.968280173249778
+      ]
     },
     "TRANSACTIONAL": {
-      "precision": 0.8679245283018868,
-      "recall": 0.6344827586206897,
-      "f1": 0.7330677290836654,
-      "support": 145
+      "precision": 0.8930232558139535,
+      "recall": 0.9070866141732283,
+      "f1": 0.9,
+      "support": 635,
+      "recall_95_ci": [
+        0.8819939885703426,
+        0.927283482172376
+      ]
     },
     "PROMOTIONAL": {
-      "precision": 0.911504424778761,
-      "recall": 0.8174603174603174,
-      "f1": 0.8619246861924686,
-      "support": 126
+      "precision": 0.9458333333333333,
+      "recall": 0.8832684824902723,
+      "f1": 0.9134808853118712,
+      "support": 257,
+      "recall_95_ci": [
+        0.8382500462866237,
+        0.9169979917003912
+      ]
     }
   },
   "confusion_matrix": [
     [
-      638,
-      6,
-      0
+      1230,
+      48,
+      5
     ],
     [
-      43,
-      92,
-      10
+      51,
+      576,
+      8
     ],
     [
-      15,
-      8,
-      103
+      9,
+      21,
+      227
     ]
   ]
 }
