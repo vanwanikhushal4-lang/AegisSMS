@@ -1,0 +1,105 @@
+{
+  "test_path": "F:\\sms_detection\\diverse_test_set.csv",
+  "n_samples": 139,
+  "decision_threshold": 0.5800000000000002,
+  "accuracy": 0.9568345323741008,
+  "precision": 0.9047619047619048,
+  "recall": 0.95,
+  "f1": 0.926829268292683,
+  "confusion_matrix": [
+    [
+      95,
+      4
+    ],
+    [
+      2,
+      38
+    ]
+  ],
+  "classification_report": {
+    "Ham": {
+      "precision": 0.979381443298969,
+      "recall": 0.9595959595959596,
+      "f1-score": 0.9693877551020408,
+      "support": 99.0
+    },
+    "Spam": {
+      "precision": 0.9047619047619048,
+      "recall": 0.95,
+      "f1-score": 0.926829268292683,
+      "support": 40.0
+    },
+    "accuracy": 0.9568345323741008,
+    "macro avg": {
+      "precision": 0.9420716740304369,
+      "recall": 0.9547979797979798,
+      "f1-score": 0.9481085116973619,
+      "support": 139.0
+    },
+    "weighted avg": {
+      "precision": 0.9579081947990944,
+      "recall": 0.9568345323741008,
+      "f1-score": 0.9571407085381968,
+      "support": 139.0
+    }
+  },
+  "category_breakdown": {
+    "banking_otp": {
+      "n": 11,
+      "accuracy": 0.7272727272727273
+    },
+    "ham_general": {
+      "n": 20,
+      "accuracy": 1.0
+    },
+    "legit_url": {
+      "n": 16,
+      "accuracy": 1.0
+    },
+    "mixed_language": {
+      "n": 10,
+      "accuracy": 0.9
+    },
+    "personal": {
+      "n": 21,
+      "accuracy": 1.0
+    },
+    "phishing": {
+      "n": 25,
+      "accuracy": 0.92
+    },
+    "promotional": {
+      "n": 12,
+      "accuracy": 1.0
+    },
+    "promotional_legit": {
+      "n": 24,
+      "accuracy": 1.0
+    }
+  },
+  "language_breakdown": {
+    "english": {
+      "n": 60,
+      "accuracy": 0.9333333333333333
+    },
+    "hindi": {
+      "n": 23,
+      "accuracy": 0.9565217391304348
+    },
+    "hinglish": {
+      "n": 32,
+      "accuracy": 0.96875
+    },
+    "marathi": {
+      "n": 23,
+      "accuracy": 1.0
+    },
+    "mixed": {
+      "n": 1,
+      "accuracy": 1.0
+    }
+  },
+  "legit_url_false_positive_rate": 0.0,
+  "legit_url_flagged_as_spam": [],
+  "tflite_agreement_with_keras": 1.0
+}

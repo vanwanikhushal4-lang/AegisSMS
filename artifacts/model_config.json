@@ -1,0 +1,27 @@
+{
+  "max_len": 23,
+  "max_tokens": 20000,
+  "vocab_size": 20000,
+  "numeric_features": [
+    "char_len",
+    "word_count",
+    "digit_ratio",
+    "exclaim_count",
+    "special_ratio",
+    "has_url",
+    "has_phone",
+    "currency_count",
+    "urgency_count",
+    "sensitive_info_count",
+    "refund_scam_count"
+  ],
+  "hyperparams": {
+    "name": "A",
+    "embed_dim": 64,
+    "filters": 64,
+    "dropout": 0.3,
+    "lr": 0.001
+  },
+  "seed": 42,
+  "decision_threshold": 0.5800000000000002
+}

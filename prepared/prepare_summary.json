@@ -1,0 +1,30 @@
+{
+  "total_rows_before_cap": 577949,
+  "total_rows_after_cap": 297949,
+  "train_rows": 238359,
+  "val_rows": 29795,
+  "test_rows": 29795,
+  "label_counts_overall": {
+    "0": 156834,
+    "1": 141115
+  },
+  "lang_counts_overall": {
+    "hindi": 73000,
+    "marathi": 73000,
+    "hinglish": 73000,
+    "english": 73000,
+    "original": 5949
+  },
+  "label_counts_train": {
+    "0": 125467,
+    "1": 112892
+  },
+  "label_counts_val": {
+    "0": 15683,
+    "1": 14112
+  },
+  "label_counts_test": {
+    "0": 15684,
+    "1": 14111
+  }
+}

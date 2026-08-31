@@ -1,0 +1,118 @@
+TEXT,LABEL,CATEGORY,LANG
+"Piped gas connection will be terminated tonight due to pending meter verification.",Spam,utility_termination,english
+"I accidentally sent ₹15,000 to your Google Pay by mistake. Please refund it to this UPI ID.",Spam,refund_scam,english
+"National Scholarship Portal: Your merit scholarship of ₹35,000 is ready for transfer. Submit your bank passbook details.",Spam,scheme_phishing,english
+"Your water supply will be stopped from tomorrow morning as your meter has not been verified this quarter.",Spam,utility_termination,english
+"This is to inform you that your broadband service will be suspended in 2 hours pending line verification.",Spam,utility_termination,english
+"Your DTH connection will be discontinued today, kindly get your set-top box re-verified.",Spam,utility_termination,english
+"Electricity supply to your premises will be cut off this evening due to an unresolved meter discrepancy.",Spam,utility_termination,english
+"Sorry, I sent ₹8,500 to this number instead of my cousin, could you transfer it back to my UPI handle?",Spam,refund_scam,english
+"By error your PhonePe received ₹20,000 meant for someone else, please return the amount to this account.",Spam,refund_scam,english
+"Oops, wrong UPI ID, ₹12,000 got credited to you instead of my landlord. Please send it back today.",Spam,refund_scam,english
+"PM Awas Yojana: Your housing subsidy of ₹1,20,000 is approved. Reply with your bank account number and IFSC to receive funds.",Spam,scheme_phishing,english
+"Ayushman Bharat: Your medical claim of ₹50,000 is pending, share your Aadhaar and bank passbook to process the release.",Spam,scheme_phishing,english
+"Your EPF withdrawal request has been approved. Confirm your bank account number and date of birth to release the amount.",Spam,scheme_phishing,english
+"Your ration card subsidy for this quarter is ready. Provide your bank details to receive the transfer.",Spam,scheme_phishing,english
+"Your fixed deposit has matured with a bonus of ₹40,000. Share your account number and CVV to credit the amount instantly.",Spam,loan_investment_fraud,english
+"Investment scheme matured, your profit of ₹75,000 is ready. Send your bank passbook photo to claim it.",Spam,loan_investment_fraud,english
+"You are pre-approved for a business loan of ₹2,00,000. Reply with your Aadhaar and bank account to complete disbursement.",Spam,loan_investment_fraud,english
+"Congratulations, you have been shortlisted for a data entry job. Share your bank details to process your first advance salary.",Spam,job_fraud,english
+"To release your pending cashback of ₹500, please share the OTP you just received with our executive.",Spam,otp_share_scam,english
+"Your refund is stuck, kindly share the verification code sent to your phone to complete the process.",Spam,otp_share_scam,english
+"Your gas cylinder subsidy amount will be credited only after you share the OTP sent for verification.",Spam,otp_share_scam,english
+"Your gas cylinder booking for this month is confirmed, delivery expected within 3 days.",Ham,utility_legit,english
+"Your electricity meter reading was recorded successfully during today's routine visit, no dues pending.",Ham,utility_legit,english
+"Reminder: your broadband bill of Rs.899 is due on the 5th, please pay to avoid interruption.",Ham,utility_legit,english
+"Hey, I think I sent you Rs.500 by mistake for the movie tickets, can you check and send it back whenever free?",Ham,personal_refund,english
+"Your PM Kisan installment of Rs.2,000 has been credited to your registered bank account.",Ham,scheme_legit,english
+"Your scholarship application has been successfully submitted, you can track the status on the official NSP portal.",Ham,scheme_legit,english
+"Your EPF balance as of this quarter is Rs.1,45,000, view full statement in the UMANG app.",Ham,scheme_legit,english
+"Your fixed deposit matured today and Rs.52,000 has been credited to your linked savings account.",Ham,scheme_legit,english
+"Your loan EMI of Rs.4,500 was auto-debited today as scheduled, thank you.",Ham,scheme_legit,english
+"Your OTP is 348219 for the transaction, do not share it with anyone under any circumstances.",Ham,otp_legit,english
+"Aapka piped gas connection aaj raat meter verification pending hone ki wajah se band ho jayega.",Spam,utility_termination,hinglish
+"Maine galti se aapke Google Pay par 15000 rupaye bhej diye, kripya isse mere UPI ID par wapas kar dein.",Spam,refund_scam,hinglish
+"National Scholarship Portal: Aapki merit scholarship Rs.35,000 ki transfer ke liye ready hai. Apni bank passbook details submit karein.",Spam,scheme_phishing,hinglish
+"Aapki water supply kal subah band kar di jayegi kyunki is quarter mein meter verify nahi hua hai.",Spam,utility_termination,hinglish
+"Yeh inform karna hai ki aapki broadband service 2 ghante mein line verification pending hone ki wajah se suspend ho jayegi.",Spam,utility_termination,hinglish
+"Sorry, maine yeh number par apne cousin ki jagah 8500 rupaye bhej diye, kya aap wapas mere UPI par bhej sakte hain?",Spam,refund_scam,hinglish
+"Galti se aapke PhonePe par 20000 rupaye kisi aur ke liye the credit ho gaye, kripya amount wapas kar dein.",Spam,refund_scam,hinglish
+"PM Awas Yojana: Aapki housing subsidy Rs.1,20,000 approve ho gayi hai. Fund paane ke liye apna bank account number aur IFSC reply karein.",Spam,scheme_phishing,hinglish
+"Aapka EPF withdrawal request approve ho gaya hai. Amount release karne ke liye apna bank account number aur date of birth confirm karein.",Spam,scheme_phishing,hinglish
+"Aapki FD matured ho gayi hai Rs.40,000 ke bonus ke saath. Turant credit ke liye apna account number aur CVV share karein.",Spam,loan_investment_fraud,hinglish
+"Aapko data entry job ke liye shortlist kiya gaya hai. Pehli advance salary process karne ke liye apni bank details share karein.",Spam,job_fraud,hinglish
+"Aapka Rs.500 ka pending cashback release karne ke liye, kripya abhi mila OTP hamare executive ke saath share karein.",Spam,otp_share_scam,hinglish
+"Aapka gas cylinder booking is mahine ke liye confirm hai, delivery 3 din mein expected hai.",Ham,utility_legit,hinglish
+"Aapki electricity meter reading aaj ki routine visit mein successfully record ho gayi, koi dues pending nahi hain.",Ham,utility_legit,hinglish
+"Reminder: aapka broadband bill Rs.899 ka 5 tareek ko due hai, interruption avoid karne ke liye pay kar dein.",Ham,utility_legit,hinglish
+"Yaar mujhe lagta hai maine tumhe movie tickets ke liye galti se Rs.500 bhej diye, jab free ho check karke wapas bhej dena.",Ham,personal_refund,hinglish
+"Aapki PM Kisan installment Rs.2,000 ki aapke registered bank account mein credit ho gayi hai.",Ham,scheme_legit,hinglish
+"Aapka OTP 348219 hai transaction ke liye, ise kisi bhi sthiti mein kisi ke saath share na karein.",Ham,otp_legit,hinglish
+"पाइप गैस कनेक्शन आज रात लंबित मीटर सत्यापन के कारण बंद कर दिया जाएगा।",Spam,utility_termination,hindi
+"मैंने गलती से आपके गूगल पे पर ₹15,000 भेज दिए। कृपया इसे इस यूपीआई आईडी पर वापस कर दें।",Spam,refund_scam,hindi
+"राष्ट्रीय छात्रवृत्ति पोर्टल: आपकी मेरिट छात्रवृत्ति ₹35,000 ट्रांसफर के लिए तैयार है। अपनी बैंक पासबुक विवरण जमा करें।",Spam,scheme_phishing,hindi
+"आपकी पानी की आपूर्ति कल सुबह बंद कर दी जाएगी क्योंकि इस तिमाही में मीटर सत्यापित नहीं हुआ है।",Spam,utility_termination,hindi
+"आपकी ब्रॉडबैंड सेवा 2 घंटे में लाइन सत्यापन लंबित होने के कारण निलंबित कर दी जाएगी।",Spam,utility_termination,hindi
+"क्षमा करें, मैंने अपने चचेरे भाई की जगह इस नंबर पर ₹8,500 भेज दिए, क्या आप वापस मेरी यूपीआई पर भेज सकते हैं?",Spam,refund_scam,hindi
+"गलती से आपके फोनपे पर ₹20,000 किसी और के लिए क्रेडिट हो गए, कृपया राशि वापस करें।",Spam,refund_scam,hindi
+"प्रधानमंत्री आवास योजना: आपकी हाउसिंग सब्सिडी ₹1,20,000 स्वीकृत हो गई है। फंड पाने के लिए अपना बैंक खाता नंबर और आईएफएससी भेजें।",Spam,scheme_phishing,hindi
+"आपका EPF निकासी अनुरोध स्वीकृत हो गया है। राशि जारी करने के लिए अपना बैंक खाता नंबर और जन्मतिथि पुष्टि करें।",Spam,scheme_phishing,hindi
+"आपकी एफडी ₹40,000 के बोनस के साथ परिपक्व हो गई है। तुरंत क्रेडिट के लिए अपना खाता नंबर और सीवीवी साझा करें।",Spam,loan_investment_fraud,hindi
+"आपको डेटा एंट्री जॉब के लिए शॉर्टलिस्ट किया गया है। पहली एडवांस सैलरी प्रोसेस करने के लिए अपनी बैंक विवरण साझा करें।",Spam,job_fraud,hindi
+"आपके ₹500 के लंबित कैशबैक को जारी करने के लिए, कृपया अभी मिला OTP हमारे एक्जीक्यूटिव के साथ साझा करें।",Spam,otp_share_scam,hindi
+"आपकी गैस सिलेंडर बुकिंग इस महीने के लिए पुष्टि हो गई है, डिलीवरी 3 दिनों में अपेक्षित है।",Ham,utility_legit,hindi
+"आपकी बिजली मीटर रीडिंग आज की नियमित यात्रा में सफलतापूर्वक दर्ज हो गई, कोई बकाया नहीं है।",Ham,utility_legit,hindi
+"याद दिलाना: आपका ब्रॉडबैंड बिल Rs.899 का 5 तारीख को देय है, कृपया रुकावट से बचने के लिए भुगतान करें।",Ham,utility_legit,hindi
+"मुझे लगता है मैंने मूवी टिकट के लिए गलती से तुम्हें Rs.500 भेज दिए, जब फ्री हो तो चेक करके वापस भेज देना।",Ham,personal_refund,hindi
+"आपकी पीएम किसान किस्त Rs.2,000 आपके पंजीकृत बैंक खाते में जमा हो गई है।",Ham,scheme_legit,hindi
+"आपका OTP 348219 है लेनदेन के लिए, इसे किसी भी स्थिति में किसी के साथ साझा न करें।",Ham,otp_legit,hindi
+"पाइप गॅस कनेक्शन प्रलंबित मीटर पडताळणीमुळे आज रात्री बंद केले जाईल.",Spam,utility_termination,marathi
+"मी चुकून तुमच्या गुगल पेवर ₹15,000 पाठवले. कृपया हे या UPI आयडीवर परत करा.",Spam,refund_scam,marathi
+"राष्ट्रीय शिष्यवृत्ती पोर्टल: तुमची गुणवत्ता शिष्यवृत्ती ₹35,000 ट्रान्सफरसाठी तयार आहे. तुमची बँक पासबुक माहिती सबमिट करा.",Spam,scheme_phishing,marathi
+"तुमचा पाणीपुरवठा उद्या सकाळी बंद केला जाईल कारण या तिमाहीत मीटर पडताळले गेले नाही.",Spam,utility_termination,marathi
+"तुमची ब्रॉडबँड सेवा 2 तासांत लाईन पडताळणी प्रलंबित असल्यामुळे स्थगित केली जाईल.",Spam,utility_termination,marathi
+"माफ करा, मी माझ्या चुलत भावाऐवजी या नंबरवर ₹8,500 पाठवले, कृपया माझ्या UPI वर परत पाठवाल का?",Spam,refund_scam,marathi
+"चुकून तुमच्या PhonePe वर ₹20,000 दुसऱ्या कोणासाठी होते ते जमा झाले, कृपया रक्कम परत करा.",Spam,refund_scam,marathi
+"प्रधानमंत्री आवास योजना: तुमची घरकुल सबसिडी ₹1,20,000 मंजूर झाली आहे. निधीसाठी तुमचा बँक खाते क्रमांक आणि IFSC पाठवा.",Spam,scheme_phishing,marathi
+"तुमची EPF काढण्याची विनंती मंजूर झाली आहे. रक्कम जारी करण्यासाठी तुमचा बँक खाते क्रमांक आणि जन्मतारीख पुष्टी करा.",Spam,scheme_phishing,marathi
+"तुमची FD ₹40,000 च्या बोनससह मॅच्युअर झाली आहे. त्वरित क्रेडिटसाठी तुमचा खाते क्रमांक आणि CVV शेअर करा.",Spam,loan_investment_fraud,marathi
+"तुम्हाला डेटा एंट्री जॉबसाठी शॉर्टलिस्ट केले आहे. पहिला अ‍ॅडव्हान्स पगार प्रक्रियेसाठी तुमची बँक माहिती शेअर करा.",Spam,job_fraud,marathi
+"तुमचा ₹500 चा प्रलंबित कॅशबॅक रिलीज करण्यासाठी, कृपया आत्ताच मिळालेला OTP आमच्या एक्झिक्युटिव्हसोबत शेअर करा.",Spam,otp_share_scam,marathi
+"तुमची गॅस सिलेंडर बुकिंग या महिन्यासाठी कन्फर्म झाली आहे, डिलिव्हरी 3 दिवसांत अपेक्षित आहे.",Ham,utility_legit,marathi
+"तुमची वीज मीटर रीडिंग आजच्या नियमित भेटीत यशस्वीरित्या नोंदवली गेली, कोणतीही थकबाकी नाही.",Ham,utility_legit,marathi
+"आठवण: तुमचे ब्रॉडबँड बिल Rs.899 चे 5 तारखेला देय आहे, कृपया व्यत्यय टाळण्यासाठी भरा.",Ham,utility_legit,marathi
+"मला वाटते मी सिनेमाच्या तिकिटांसाठी चुकून तुला Rs.500 पाठवले, मोकळा झाल्यावर तपासून परत पाठव.",Ham,personal_refund,marathi
+"तुमचा पीएम किसान हप्ता Rs.2,000 तुमच्या नोंदणीकृत बँक खात्यात जमा झाला आहे.",Ham,scheme_legit,marathi
+"तुमचा OTP 348219 आहे व्यवहारासाठी, तो कोणत्याही परिस्थितीत कोणाशीही शेअर करू नका.",Ham,otp_legit,marathi
+"HURRY! Only a few hours left on Myntra's End of Season Sale, up to 70% off, don't miss out: https://myntra.com/eoss",Ham,promotional_legit,english
+"Last chance: your Airtel Rs.499 plan offer of extra 25GB data expires tonight. Recharge now: https://airtel.in/offers",Ham,promotional_legit,english
+"FINAL HOURS of the Amazon Great Indian Festival! Grab the best deals before they're gone: https://amazon.in/deals",Ham,promotional_legit,english
+"Only for today: PharmEasy is offering flat 25% off on all medicines, order before midnight: https://pharmeasy.in/offers",Ham,promotional_legit,english
+"Amazon: You have been randomly selected to receive a free iPhone 15. Claim your prize now by calling 9876512340.",Spam,promotional_brand_impersonation,english
+"Flipkart Anniversary Winner Alert: Your number has won Rs.1,00,000 cashback. Click to claim: http://flipkart-rewards-claim.xyz/win",Spam,promotional_brand_impersonation,english
+"This is Airtel: your SIM will get a free upgrade only if you share the OTP sent to you with our verification team.",Spam,promotional_brand_impersonation,english
+"Myntra Mega Giveaway: You are today's lucky shopper! Reply CLAIM with your bank account number to receive Rs.20,000.",Spam,promotional_brand_impersonation,english
+"JALDI KARO! Myntra ki End of Season Sale mein bas kuch ghante bache hain, 70% tak off, miss mat karein: https://myntra.com/eoss",Ham,promotional_legit,hinglish
+"Aakhri mauka: aapke Airtel Rs.499 plan ka extra 25GB data offer aaj raat expire ho raha hai. Abhi recharge karein: https://airtel.in/offers",Ham,promotional_legit,hinglish
+"Amazon Great Indian Festival ke AAKHRI GHANTE! Khatam hone se pehle best deals grab karein: https://amazon.in/deals",Ham,promotional_legit,hinglish
+"Sirf aaj ke liye: PharmEasy sabhi medicines par flat 25% off de raha hai, aadhi raat se pehle order karein: https://pharmeasy.in/offers",Ham,promotional_legit,hinglish
+"Amazon: Aapko randomly select kiya gaya hai ek free iPhone 15 paane ke liye. Abhi 9876512340 par call karke apna prize claim karein.",Spam,promotional_brand_impersonation,hinglish
+"Flipkart Anniversary Winner Alert: Aapka number Rs.1,00,000 cashback jeet chuka hai. Claim karne ke liye click karein: http://flipkart-rewards-claim.xyz/win",Spam,promotional_brand_impersonation,hinglish
+"Yeh Airtel hai: aapki SIM ko free upgrade tabhi milega jab aap humari verification team ke saath apna OTP share karenge.",Spam,promotional_brand_impersonation,hinglish
+"Myntra Mega Giveaway: Aap aaj ke lucky shopper hain! Rs.20,000 paane ke liye apna bank account number CLAIM ke saath reply karein.",Spam,promotional_brand_impersonation,hinglish
+"जल्दी करें! Myntra की एंड ऑफ सीजन सेल में बस कुछ घंटे बचे हैं, 70% तक छूट, मौका न चूकें: https://myntra.com/eoss",Ham,promotional_legit,hindi
+"आखिरी मौका: आपके Airtel Rs.499 प्लान का एक्स्ट्रा 25GB डेटा ऑफर आज रात एक्सपायर हो रहा है। अभी रिचार्ज करें: https://airtel.in/offers",Ham,promotional_legit,hindi
+"Amazon Great Indian Festival के आखिरी घंटे! खत्म होने से पहले बेस्ट डील्स पाएं: https://amazon.in/deals",Ham,promotional_legit,hindi
+"सिर्फ आज के लिए: PharmEasy सभी दवाओं पर फ्लैट 25% छूट दे रहा है, आधी रात से पहले ऑर्डर करें: https://pharmeasy.in/offers",Ham,promotional_legit,hindi
+"Amazon: आपको रैंडमली एक फ्री iPhone 15 पाने के लिए चुना गया है। अभी 9876512340 पर कॉल करके अपना प्राइज क्लेम करें।",Spam,promotional_brand_impersonation,hindi
+"Flipkart Anniversary Winner Alert: आपका नंबर Rs.1,00,000 कैशबैक जीत चुका है। क्लेम करने के लिए क्लिक करें: http://flipkart-rewards-claim.xyz/win",Spam,promotional_brand_impersonation,hindi
+"यह Airtel है: आपकी सिम को फ्री अपग्रेड तभी मिलेगा जब आप हमारी वेरिफिकेशन टीम के साथ अपना OTP साझा करेंगे।",Spam,promotional_brand_impersonation,hindi
+"Myntra Mega Giveaway: आप आज के लकी शॉपर हैं! Rs.20,000 पाने के लिए अपना बैंक अकाउंट नंबर CLAIM के साथ रिप्लाई करें।",Spam,promotional_brand_impersonation,hindi
+"घाई करा! Myntra च्या एंड ऑफ सीझन सेलमध्ये फक्त काही तास शिल्लक आहेत, 70% पर्यंत सूट, संधी गमावू नका: https://myntra.com/eoss",Ham,promotional_legit,marathi
+"शेवटची संधी: तुमच्या Airtel Rs.499 प्लॅनचा एक्स्ट्रा 25GB डेटा ऑफर आज रात्री संपत आहे. आत्ताच रिचार्ज करा: https://airtel.in/offers",Ham,promotional_legit,marathi
+"Amazon Great Indian Festival चे शेवटचे तास! संपण्यापूर्वी बेस्ट डील्स मिळवा: https://amazon.in/deals",Ham,promotional_legit,marathi
+"फक्त आजसाठी: PharmEasy सर्व औषधांवर फ्लॅट 25% सूट देत आहे, मध्यरात्रीपूर्वी ऑर्डर करा: https://pharmeasy.in/offers",Ham,promotional_legit,marathi
+"Amazon: तुम्हाला रँडमली एक फ्री iPhone 15 मिळवण्यासाठी निवडले गेले आहे. आत्ताच 9876512340 वर कॉल करून तुमचे बक्षीस मिळवा.",Spam,promotional_brand_impersonation,marathi
+"Flipkart Anniversary Winner Alert: तुमचा नंबर Rs.1,00,000 कॅशबॅक जिंकला आहे. दावा करण्यासाठी क्लिक करा: http://flipkart-rewards-claim.xyz/win",Spam,promotional_brand_impersonation,marathi
+"हे Airtel आहे: तुमच्या सिमला फ्री अपग्रेड तेव्हाच मिळेल जेव्हा तुम्ही आमच्या व्हेरिफिकेशन टीमसोबत तुमचा OTP शेअर कराल.",Spam,promotional_brand_impersonation,marathi
+"Myntra Mega Giveaway: तुम्ही आजचे लकी शॉपर आहात! Rs.20,000 मिळवण्यासाठी तुमचा बँक खाते क्रमांक CLAIM सह रिप्लाय करा.",Spam,promotional_brand_impersonation,marathi

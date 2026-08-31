@@ -1,0 +1,42 @@
+[
+  {
+    "config": {
+      "name": "A",
+      "embed_dim": 64,
+      "filters": 64,
+      "dropout": 0.3,
+      "lr": 0.001
+    },
+    "val_accuracy": 0.9995972514152527
+  },
+  {
+    "config": {
+      "name": "B",
+      "embed_dim": 128,
+      "filters": 128,
+      "dropout": 0.3,
+      "lr": 0.001
+    },
+    "val_accuracy": 0.9994630217552185
+  },
+  {
+    "config": {
+      "name": "C",
+      "embed_dim": 64,
+      "filters": 128,
+      "dropout": 0.5,
+      "lr": 0.0005
+    },
+    "val_accuracy": 0.9991945028305054
+  },
+  {
+    "config": {
+      "name": "D",
+      "embed_dim": 128,
+      "filters": 64,
+      "dropout": 0.2,
+      "lr": 0.001
+    },
+    "val_accuracy": 0.9995301365852356
+  }
+]

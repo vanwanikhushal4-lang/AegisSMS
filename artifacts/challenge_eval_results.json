@@ -1,0 +1,117 @@
+{
+  "test_path": "challenge_test_set.csv",
+  "n_samples": 117,
+  "decision_threshold": 0.5800000000000002,
+  "accuracy": 0.9401709401709402,
+  "precision": 0.9459459459459459,
+  "recall": 0.958904109589041,
+  "f1": 0.9523809523809523,
+  "confusion_matrix": [
+    [
+      40,
+      4
+    ],
+    [
+      3,
+      70
+    ]
+  ],
+  "classification_report": {
+    "Ham": {
+      "precision": 0.9302325581395349,
+      "recall": 0.9090909090909091,
+      "f1-score": 0.9195402298850575,
+      "support": 44.0
+    },
+    "Spam": {
+      "precision": 0.9459459459459459,
+      "recall": 0.958904109589041,
+      "f1-score": 0.9523809523809523,
+      "support": 73.0
+    },
+    "accuracy": 0.9401709401709402,
+    "macro avg": {
+      "precision": 0.9380892520427404,
+      "recall": 0.933997509339975,
+      "f1-score": 0.9359605911330049,
+      "support": 117.0
+    },
+    "weighted avg": {
+      "precision": 0.9400366377110563,
+      "recall": 0.9401709401709402,
+      "f1-score": 0.9400305952030089,
+      "support": 117.0
+    }
+  },
+  "category_breakdown": {
+    "job_fraud": {
+      "n": 4,
+      "accuracy": 1.0
+    },
+    "loan_investment_fraud": {
+      "n": 6,
+      "accuracy": 1.0
+    },
+    "otp_legit": {
+      "n": 4,
+      "accuracy": 0.75
+    },
+    "otp_share_scam": {
+      "n": 6,
+      "accuracy": 1.0
+    },
+    "personal_refund": {
+      "n": 4,
+      "accuracy": 0.75
+    },
+    "promotional_brand_impersonation": {
+      "n": 16,
+      "accuracy": 1.0
+    },
+    "promotional_legit": {
+      "n": 16,
+      "accuracy": 1.0
+    },
+    "refund_scam": {
+      "n": 13,
+      "accuracy": 0.8461538461538461
+    },
+    "scheme_legit": {
+      "n": 8,
+      "accuracy": 1.0
+    },
+    "scheme_phishing": {
+      "n": 14,
+      "accuracy": 1.0
+    },
+    "utility_legit": {
+      "n": 12,
+      "accuracy": 0.8333333333333334
+    },
+    "utility_termination": {
+      "n": 14,
+      "accuracy": 0.9285714285714286
+    }
+  },
+  "language_breakdown": {
+    "english": {
+      "n": 39,
+      "accuracy": 0.9230769230769231
+    },
+    "hindi": {
+      "n": 26,
+      "accuracy": 0.9615384615384616
+    },
+    "hinglish": {
+      "n": 26,
+      "accuracy": 0.9230769230769231
+    },
+    "marathi": {
+      "n": 26,
+      "accuracy": 0.9615384615384616
+    }
+  },
+  "legit_url_false_positive_rate": null,
+  "legit_url_flagged_as_spam": [],
+  "tflite_agreement_with_keras": 1.0
+}
