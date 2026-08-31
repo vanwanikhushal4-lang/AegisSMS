@@ -1,6 +1,6 @@
 {
   "manifest_version": "1.0.0",
-  "total_real_records": 32429,
+  "total_real_records": 32430,
   "synthetic_count": 0,
   "sources": [
     {
@@ -78,7 +78,7 @@
       "supported_languages": [
         "en"
       ],
-      "record_count_in_production_pool": 262
+      "record_count_in_production_pool": 263
     },
     {
       "source_id": "codesignal_sms_spam",

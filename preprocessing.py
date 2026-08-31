@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Shared text cleaning, normalization, and feature engineering for the
-4-Way SMS Intent & Threat Engine (PERSONAL, TRANSACTIONAL, PROMOTIONAL, SCAM).
+AegisSMS Enterprise Preprocessing & Feature Engineering Contract
+Shared between Python and Kotlin/Java implementations with 100% mathematical parity.
 """
 import re
 import unicodedata
+from typing import Tuple, Dict, Any
 
 # 1. Regex Patterns
-URL_RE = re.compile(r"(https?://\S+|www\.\S+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/\S*)?)", re.IGNORECASE)
-PHONE_RE = re.compile(r"(\+?\d[\d\-\s]{8,}\d)")
+VPA_RE = re.compile(r"\b[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-_]+\b")
+URL_RE = re.compile(r"(https?://\S+|www\.\S+|(?:[a-zA-Z0-9-]+\.)+(?:com|in|org|net|co|gov|edu|io|ai|xyz|top|site|online|apk|app|live|me|ly|link|info)(?:/\S*)?)", re.IGNORECASE)
+PHONE_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
 ZERO_WIDTH_RE = re.compile(r"[\u200B-\u200D\uFEFF\u200E\u200F\u00AD]")
 
 # 2. Urgency & Threat Keywords
@@ -22,7 +24,7 @@ URGENCY_KEYWORDS = [
     "service will be", "ready for transfer", "final notice", "account locked",
     "pay immediately", "disconnect tonight", "call immediately",
     "pending challan", "challan", "legal action", "court notice", "traffic fine",
-    "parivahan", "avoid legal action", "penalty",
+    "parivahan", "avoid legal action", "avoid legal disputes", "penalty",
     "तुरंत", "ब्लॉक हो जाएगा", "सत्यापित करें", "जीत चुका", "केवाईसी",
     "निलंबित", "अभी वेरीफाई", "अभिनंदन! आप", "लगेच केवायसी",
     "समाप्त कर दिया जाएगा", "बंद केले जाईल", "काट दी जाएगी",
@@ -72,6 +74,9 @@ LABEL_TO_ID = {
 }
 ID_TO_LABEL = {v: k for k, v in LABEL_TO_ID.items()}
 
+# Operating threshold
+IS_SCAM_OPERATING_THRESHOLD = 0.50
+
 def normalize_unicode(text: str) -> str:
     if not text:
         return ""
@@ -86,16 +91,23 @@ def urlwords(url: str) -> str:
     parts = re.split(r"[^a-z0-9]+", u)
     return " ".join(p for p in parts if p)
 
-def clean_and_featurize(text: str):
+def clean_and_featurize(text: str) -> Tuple[str, Dict[str, float]]:
     text = normalize_unicode(text)
     orig_len = len(text)
 
-    urls = URL_RE.findall(text)
-    has_url = 1.0 if len(urls) > 0 else 0.0
+    # 1. Mask UPI VPAs before URL extraction to avoid false domain matches (e.g. name.cf@axisbank)
+    vpas = VPA_RE.findall(text)
     cleaned = text
+    for v in vpas:
+        cleaned = cleaned.replace(v, " upivpa ")
+
+    # 2. Extract and expand URLs
+    urls = URL_RE.findall(cleaned)
+    has_url = 1.0 if len(urls) > 0 else 0.0
     for u in urls:
         cleaned = cleaned.replace(u, " " + urlwords(u) + " ")
 
+    # 3. Mask Phones
     phones = PHONE_RE.findall(cleaned)
     has_phone = 1.0 if len(phones) > 0 else 0.0
     for p in phones:
@@ -104,12 +116,14 @@ def clean_and_featurize(text: str):
     cleaned = cleaned.lower()
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
 
+    # 4. Compute 11 Numeric Threat & Structure Features
     digit_count = sum(ch.isdigit() for ch in text)
     digit_ratio = float(digit_count) / max(orig_len, 1)
     exclaim_count = float(text.count("!"))
     special_count = sum(1 for ch in text if not ch.isalnum() and not ch.isspace())
     special_ratio = float(special_count) / max(orig_len, 1)
-    word_count = float(len(cleaned.split()))
+    words = re.findall(r"(?u)\b\w+\b", cleaned)
+    word_count = float(len(words))
 
     lower_full = text.lower()
     urgency_count = float(sum(lower_full.count(k) for k in URGENCY_KEYWORDS))

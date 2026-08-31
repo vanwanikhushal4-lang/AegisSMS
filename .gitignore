@@ -71,3 +71,6 @@ venv.bak/
 *result.txt
 *.tmp
 *.log
+
+bin/
+*.class
