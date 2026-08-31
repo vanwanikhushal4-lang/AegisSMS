@@ -1,0 +1,62 @@
+{
+  "en": {
+    "sample_count": 3207,
+    "scam_count": 821,
+    "legit_count": 2386,
+    "scam_precision": 0.9915,
+    "scam_precision_ci95": [
+      0.9825,
+      0.9959
+    ],
+    "scam_recall": 0.9903,
+    "scam_recall_ci95": [
+      0.9809,
+      0.9951
+    ],
+    "legitimate_fpr": 0.0029,
+    "legitimate_fpr_ci95": [
+      0.0014,
+      0.006
+    ]
+  },
+  "hinglish": {
+    "sample_count": 515,
+    "scam_count": 101,
+    "legit_count": 414,
+    "scam_precision": 0.9524,
+    "scam_precision_ci95": [
+      0.8933,
+      0.9795
+    ],
+    "scam_recall": 0.9901,
+    "scam_recall_ci95": [
+      0.946,
+      0.9983
+    ],
+    "legitimate_fpr": 0.0121,
+    "legitimate_fpr_ci95": [
+      0.0052,
+      0.028
+    ]
+  },
+  "mr": {
+    "sample_count": 5,
+    "scam_count": 0,
+    "legit_count": 5,
+    "scam_precision": 1.0,
+    "scam_precision_ci95": [
+      0.0,
+      0.0
+    ],
+    "scam_recall": 1.0,
+    "scam_recall_ci95": [
+      0.0,
+      0.0
+    ],
+    "legitimate_fpr": 0.0,
+    "legitimate_fpr_ci95": [
+      0.0,
+      0.4345
+    ]
+  }
+}

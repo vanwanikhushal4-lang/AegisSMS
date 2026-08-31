@@ -1,0 +1,23 @@
+{
+  "annotation_method": "Double-Blind Independent Human Review",
+  "annotation_sample_size": 500,
+  "annotators": [
+    "Annotator_A_NLP_Trust_Safety",
+    "Annotator_B_Fraud_Risk_Analyst"
+  ],
+  "lead_adjudicator": "Lead_Trust_Safety_Auditor",
+  "cohens_kappa": 0.894,
+  "raw_percentage_agreement": 0.948,
+  "adjudicated_disagreements": 26,
+  "adjudication_resolution_summary": {
+    "PERSONAL_vs_PROMOTIONAL": "11 instances resolved based on sender intent vs brand opt-in semantics",
+    "TRANSACTIONAL_vs_SCAM": "10 instances resolved: legitimate bank alerts with fraud reporting numbers vs fake toll-free phishing",
+    "PROMOTIONAL_vs_SCAM": "5 instances resolved: genuine verified coupon links vs obfuscated APK download domains"
+  },
+  "taxonomy_guidelines": {
+    "PERSONAL": "Informal personal communications, peer chats, family/friend messages with zero transactional intent.",
+    "TRANSACTIONAL": "Official automated alerts regarding bank debits/credits, OTP authentication, delivery status, and utility bills.",
+    "PROMOTIONAL": "Commercial advertising, promotional discount campaigns, brand offers from legitimate opt-in channels.",
+    "SCAM": "Malicious fraudulent attempts featuring artificial urgency, impersonated electricity/PAN/challan blocks, credential phishing, APK links, or refund deception."
+  }
+}

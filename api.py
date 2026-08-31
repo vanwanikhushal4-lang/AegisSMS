@@ -2,6 +2,7 @@
 """
 FastAPI Production Prediction Service for AegisSMS 4-Way Intent & Threat Engine
 Categories: PERSONAL, TRANSACTIONAL, PROMOTIONAL, SCAM
+Uniform Decision Rule: SCAM if predicted category is SCAM or P(SCAM) >= is_scam_operating_threshold
 """
 import os
 import json
@@ -17,24 +18,28 @@ from preprocessing import clean_and_featurize, NUMERIC_FEATURES, ID_TO_LABEL
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARTIFACT_DIR = os.path.join(BASE_DIR, "artifacts")
 
+# Load model, vectorizer, scaler, and calibrated contract threshold
 with open(os.path.join(ARTIFACT_DIR, "sms_model_3way.pkl"), "rb") as f:
     clf = pickle.load(f)
 with open(os.path.join(ARTIFACT_DIR, "vectorizer_3way.pkl"), "rb") as f:
     vectorizer = pickle.load(f)
-with open(os.path.join(ARTIFACT_DIR, "feature_scaler_3way.json"), "r") as f:
+with open(os.path.join(ARTIFACT_DIR, "feature_scaler_3way.json"), "r", encoding="utf-8") as f:
     scaler = json.load(f)
+with open(os.path.join(ARTIFACT_DIR, "aegis_model_contract.json"), "r", encoding="utf-8") as f:
+    contract = json.load(f)
 
 mean = np.array(scaler["mean"], dtype=np.float32)
 std = np.array(scaler["std"], dtype=np.float32)
+IS_SCAM_THRESHOLD = float(contract.get("is_scam_operating_threshold", 0.69))
 
 app = FastAPI(
     title="AegisSMS 4-Way Intent & Threat Intelligence Engine",
     version="2.3.0",
-    description="Classifies SMS into PERSONAL, TRANSACTIONAL, PROMOTIONAL, and SCAM."
+    description="Production API for classifying SMS into PERSONAL, TRANSACTIONAL, PROMOTIONAL, and SCAM."
 )
 
 class SmsRequest(BaseModel):
-    text: str = Field(..., min_length=1, max_length=2000, description="Raw SMS text message")
+    text: str = Field(..., min_length=1, max_length=5000, description="Raw SMS text message")
 
 class BatchSmsRequest(BaseModel):
     messages: List[str] = Field(..., max_length=200, description="List of raw SMS text messages")
@@ -50,13 +55,15 @@ def predict_single(text: str) -> Dict[str, Any]:
     pred_id = int(np.argmax(probs))
     pred_label = ID_TO_LABEL[pred_id]
 
-    is_scam = bool(pred_label == "SCAM" or probs[3] >= 0.40)
+    # Single Uniform Operating Decision Rule
+    is_scam = bool(pred_label == "SCAM" or probs[3] >= IS_SCAM_THRESHOLD)
 
     return {
         "text": text,
         "category": pred_label,
         "is_scam": is_scam,
         "confidence": float(round(probs[pred_id], 4)),
+        "operating_threshold": IS_SCAM_THRESHOLD,
         "probabilities": {
             "PERSONAL": float(round(probs[0], 4)),
             "TRANSACTIONAL": float(round(probs[1], 4)),
@@ -74,7 +81,11 @@ def predict_single(text: str) -> Dict[str, Any]:
 
 @app.get("/health")
 def health_check():
-    return {"status": "HEALTHY", "model_version": "2.3.0-4WAY-SCAM"}
+    return {
+        "status": "HEALTHY",
+        "model_version": "2.3.0-4WAY-SCAM",
+        "is_scam_operating_threshold": IS_SCAM_THRESHOLD
+    }
 
 @app.post("/predict")
 def predict_sms_endpoint(req: SmsRequest):
