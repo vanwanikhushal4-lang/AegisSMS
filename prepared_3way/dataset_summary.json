@@ -1,0 +1,22 @@
+{
+  "train_rows": 49031,
+  "val_rows": 862,
+  "test_rows": 867,
+  "val_is_100pct_real": true,
+  "test_is_100pct_real": true,
+  "train_distribution": {
+    "HAM": 18383,
+    "SMISHING": 15331,
+    "MARKETING_SPAM": 15317
+  },
+  "val_distribution": {
+    "HAM": 724,
+    "SMISHING": 70,
+    "MARKETING_SPAM": 68
+  },
+  "test_distribution": {
+    "HAM": 726,
+    "SMISHING": 72,
+    "MARKETING_SPAM": 69
+  }
+}

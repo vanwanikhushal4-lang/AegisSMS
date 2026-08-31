@@ -1,0 +1,27 @@
+{
+  "seed": 42,
+  "total_real_samples": 5760,
+  "real_train_samples": 4031,
+  "real_val_samples": 862,
+  "real_test_samples": 867,
+  "train_label_distribution": {
+    "HAM": 3383,
+    "SMISHING": 331,
+    "MARKETING_SPAM": 317
+  },
+  "val_label_distribution": {
+    "HAM": 724,
+    "SMISHING": 70,
+    "MARKETING_SPAM": 68
+  },
+  "test_label_distribution": {
+    "HAM": 726,
+    "SMISHING": 72,
+    "MARKETING_SPAM": 69
+  },
+  "raw_text_train_val_overlap": 0,
+  "raw_text_train_test_overlap": 0,
+  "normalized_text_train_val_overlap": 0,
+  "normalized_text_train_test_overlap": 0,
+  "zero_leakage_verified": true
+}
