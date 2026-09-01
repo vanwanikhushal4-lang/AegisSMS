@@ -1,86 +1,54 @@
 {
-  "test_accuracy": 0.9996979358952844,
-  "test_precision": 0.9997165131112686,
-  "test_recall": 0.999645666501311,
-  "test_f1": 0.999681088551079,
-  "confusion_matrix": [
-    [
-      15680,
-      4
+  "model_version": "2.3.0-P5-PROD",
+  "evaluation_type": "Blind Template-Family Isolated Holdout Split",
+  "total_test_samples": 744,
+  "is_scam_operating_threshold": 0.69,
+  "metrics": {
+    "overall_accuracy": 0.879,
+    "scam_precision": 0.9492,
+    "scam_recall": 0.7368,
+    "legitimate_fpr": 0.0045,
+    "true_positives": 56,
+    "false_positives": 3,
+    "false_negatives": 20,
+    "true_negatives": 665
+  },
+  "hard_negative_metrics": {
+    "total_hard_negatives": 500,
+    "false_positives": 0,
+    "false_positive_rate": 0.0
+  },
+  "confusion_matrix_4way": {
+    "labels": [
+      "PERSONAL",
+      "TRANSACTIONAL",
+      "PROMOTIONAL",
+      "SCAM"
     ],
-    [
-      5,
-      14106
-    ]
-  ],
-  "classification_report": {
-    "Ham": {
-      "precision": 0.999681224099458,
-      "recall": 0.9997449630196379,
-      "f1-score": 0.999713092543594,
-      "support": 15684.0
-    },
-    "Spam": {
-      "precision": 0.9997165131112686,
-      "recall": 0.999645666501311,
-      "f1-score": 0.999681088551079,
-      "support": 14111.0
-    },
-    "accuracy": 0.9996979358952844,
-    "macro avg": {
-      "precision": 0.9996988686053634,
-      "recall": 0.9996953147604745,
-      "f1-score": 0.9996970905473365,
-      "support": 29795.0
-    },
-    "weighted avg": {
-      "precision": 0.9996979370796782,
-      "recall": 0.9996979358952844,
-      "f1-score": 0.9996979353582145,
-      "support": 29795.0
-    }
-  },
-  "cv_accuracy_mean": 0.9995599547439614,
-  "cv_accuracy_std": 8.552620733618705e-05,
-  "best_hyperparams": {
-    "name": "A",
-    "embed_dim": 64,
-    "filters": 64,
-    "dropout": 0.3,
-    "lr": 0.001
-  },
-  "decision_threshold": 0.5800000000000002,
-  "metrics_at_default_0.5_threshold": {
-    "threshold": 0.5,
-    "accuracy": 0.9996979358952844,
-    "precision": 0.9997165131112686,
-    "recall": 0.999645666501311,
-    "f1": 0.999681088551079,
-    "confusion_matrix": [
+    "matrix": [
       [
-        15680,
-        4
+        492,
+        17,
+        1,
+        0
       ],
       [
-        5,
-        14106
-      ]
-    ]
-  },
-  "metrics_at_tuned_threshold": {
-    "threshold": 0.5800000000000002,
-    "accuracy": 0.9996979358952844,
-    "precision": 0.9997165131112686,
-    "recall": 0.999645666501311,
-    "f1": 0.999681088551079,
-    "confusion_matrix": [
-      [
-        15680,
-        4
+        37,
+        76,
+        2,
+        0
       ],
       [
-        5,
-        14106
+        7,
+        3,
+        30,
+        3
+      ],
+      [
+        4,
+        4,
+        12,
+        56
       ]
     ]
   }

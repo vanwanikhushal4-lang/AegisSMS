@@ -2,9 +2,10 @@ name: AegisSMS CI Quality Gates
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "fix/**", "feat/**" ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -29,20 +30,30 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: "Install Kotlin Compiler"
+      run: |
+        sudo snap install --classic kotlin
+
     - name: "Gate 1 - Zero Data and Template-Family Leakage Verification"
       run: pytest tests/gates/test_gate1_leakage.py -v
 
     - name: "Gate 2 - Quality Gates and Live Model Execution Metrics"
       run: pytest tests/gates/test_gate2_metrics.py -v
 
-    - name: "Gate 3 - 1000 Golden Parity Vectors Verification (JVM Execution)"
+    - name: "Gate 3 - 1000 Golden Parity Vectors Verification (JVM & Kotlin Execution)"
       run: pytest tests/gates/test_gate3_parity.py -v
 
     - name: "Gate 4 - Provenance Manifest and SHA-256 Hashes Verification"
       run: pytest tests/gates/test_gate4_provenance_and_hashes.py -v
 
-    - name: "Gate 5 - API and Concurrency Tests"
+    - name: "Gate 5 - API Concurrency and Full Holdout FPR Evaluation"
       run: pytest tests/gates/test_gate5_api_concurrency.py -v
+
+    - name: "Gate 6 - Strict PII De-Identification & Data Privacy Scanner"
+      run: pytest tests/gates/test_privacy_and_deidentification.py -v
+
+    - name: "Gate 7 - Data Allowlist & Non-Synthetic Origin Verification"
+      run: pytest tests/gates/test_data_allowlist_and_integrity.py -v
 
     - name: "Adversarial and Obfuscation Robustness Suite"
       run: pytest tests/test_adversarial.py -v

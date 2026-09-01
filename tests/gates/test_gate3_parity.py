@@ -76,29 +76,34 @@ def test_gate3_actual_kotlin_parity_execution():
         kt_classifier,
         kt_runner
     ]
-    res_compile = subprocess.run(compile_cmd, cwd=BASE_DIR, capture_output=True, text=True)
+    env = dict(os.environ)
+    if os.name == "nt":
+        env["PATH"] = r"C:\Windows\System32;C:\Windows;" + env.get("PATH", "")
+    res_compile = subprocess.run(compile_cmd, cwd=BASE_DIR, capture_output=True, text=True, env=env)
     assert res_compile.returncode == 0, f"kotlinc failed:\nSTDOUT: {res_compile.stdout}\nSTDERR: {res_compile.stderr}"
 
     # 2. Execute Kotlin Classifier on JVM with -Xss4m
     sep = ";" if os.name == "nt" else ":"
     run_cmd = ["java", "-Xss4m", "-cp", f"{out_jar}{sep}{json_jar}", "com.payshield.aegissms.KotlinParityRunner", "."]
-    res_run = subprocess.run(run_cmd, cwd=BASE_DIR, capture_output=True, text=True)
+    res_run = subprocess.run(run_cmd, cwd=BASE_DIR, capture_output=True, text=True, env=env)
     print("\n" + res_run.stdout)
     assert res_run.returncode == 0, f"Kotlin Parity Execution failed:\nSTDOUT: {res_run.stdout}\nSTDERR: {res_run.stderr}"
     assert "STATUS: [PASS]" in res_run.stdout, "Kotlin parity check did not pass"
 
 def test_gate3_actual_java_parity_execution():
+    json_jar = ensure_json_jar()
     bin_dir = os.path.join(BASE_DIR, "bin")
     os.makedirs(bin_dir, exist_ok=True)
 
     classifier_java = os.path.join(BASE_DIR, "android", "com", "payshield", "aegissms", "AegisSmsClassifier.java")
     runner_java = os.path.join(BASE_DIR, "tests", "parity", "com", "payshield", "aegissms", "ParityTestRunner.java")
 
-    compile_cmd = ["javac", "-encoding", "UTF-8", "-d", bin_dir, classifier_java, runner_java]
+    sep = ";" if os.name == "nt" else ":"
+    compile_cmd = ["javac", "-encoding", "UTF-8", "-cp", json_jar, "-d", bin_dir, classifier_java, runner_java]
     res_compile = subprocess.run(compile_cmd, cwd=BASE_DIR, capture_output=True, text=True)
     assert res_compile.returncode == 0, f"javac failed: {res_compile.stderr}"
 
-    run_cmd = ["java", "-Xss4m", "-cp", bin_dir, "com.payshield.aegissms.ParityTestRunner", "."]
+    run_cmd = ["java", "-Xss4m", "-cp", f"{bin_dir}{sep}{json_jar}", "com.payshield.aegissms.ParityTestRunner", "."]
     res_run = subprocess.run(run_cmd, cwd=BASE_DIR, capture_output=True, text=True)
     print("\n" + res_run.stdout)
     assert res_run.returncode == 0, f"Java Parity Execution failed: {res_run.stderr}"

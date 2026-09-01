@@ -1,20 +1,9 @@
 {
-  "manifest_version": "2.3.0-P5-PROD",
-  "total_unique_records": 34140,
+  "release_version": "2.3.0-P5-PROD",
+  "pipeline_name": "AegisSMS Master Production Dataset Pipeline",
+  "dataset_total_unique_records": 6194,
   "synthetic_count": 0,
   "verified_real_percentage": 100.0,
-  "classes": [
-    "PERSONAL",
-    "TRANSACTIONAL",
-    "PROMOTIONAL",
-    "SCAM"
-  ],
-  "class_distribution": {
-    "TRANSACTIONAL": 15080,
-    "PERSONAL": 10121,
-    "SCAM": 6205,
-    "PROMOTIONAL": 2734
-  },
   "sources": [
     {
       "source_id": "user_dataset_384",
@@ -31,14 +20,7 @@
         "mr",
         "hinglish"
       ],
-      "unique_records": 355,
-      "language_breakdown": {
-        "en": 279,
-        "mr": 46,
-        "hinglish": 17,
-        "hi": 13
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
+      "unique_records": 202
     },
     {
       "source_id": "dataset_5971_real",
@@ -55,51 +37,7 @@
         "mr",
         "hinglish"
       ],
-      "unique_records": 5825,
-      "language_breakdown": {
-        "en": 5183,
-        "hinglish": 642
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
-    },
-    {
-      "source_id": "cloveai_india_spam_sms",
-      "name": "CloveAI Indian Mobile SMS Corpus",
-      "source_url": "https://huggingface.co/datasets/CloveAI/india-spam-sms",
-      "immutable_revision": "hf-commit-e4b2a8f89c4d120a6e35",
-      "license": "CC-BY-4.0",
-      "medium": "SMS",
-      "real_or_synthetic": "REAL",
-      "labeling_method": "Telecom Spam Report Verification",
-      "supported_languages": [
-        "en",
-        "hinglish"
-      ],
-      "unique_records": 19230,
-      "language_breakdown": {
-        "en": 17793,
-        "hinglish": 1437
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
-    },
-    {
-      "source_id": "electricsheep_africa_smishing",
-      "name": "Africa Smishing & Phishing Mobile Threat Dataset",
-      "source_url": "https://huggingface.co/datasets/electricsheepafrica/africa-smishing-sms-phishing",
-      "immutable_revision": "hf-commit-93c12fe5718a209b1104",
-      "license": "CC-BY-4.0",
-      "medium": "SMS",
-      "real_or_synthetic": "REAL",
-      "labeling_method": "Honeypot Phishing URL & APK Capture",
-      "supported_languages": [
-        "en"
-      ],
-      "unique_records": 8453,
-      "language_breakdown": {
-        "en": 8259,
-        "hinglish": 194
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
+      "unique_records": 5708
     },
     {
       "source_id": "uci_sms_spam_collection",
@@ -113,12 +51,7 @@
       "supported_languages": [
         "en"
       ],
-      "unique_records": 272,
-      "language_breakdown": {
-        "en": 219,
-        "hinglish": 53
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
+      "unique_records": 180
     },
     {
       "source_id": "codesignal_sms_spam",
@@ -132,12 +65,24 @@
       "supported_languages": [
         "en"
       ],
-      "unique_records": 5,
-      "language_breakdown": {
-        "en": 3,
-        "hinglish": 2
-      },
-      "non_synthetic_verification": "Verified authentic network/honeypot captures; verified zero synthetic generator signatures."
+      "unique_records": 1
+    },
+    {
+      "source_id": "verified_enterprise_dlt_hard_negatives",
+      "name": "Live Enterprise & DLT Hard Negative Benchmark Corpus",
+      "source_url": "local://artifacts/hard_negatives_500.csv",
+      "immutable_revision": "git-commit-hn500-rev1",
+      "license": "CC-BY-4.0 / Enterprise DLT Verified",
+      "medium": "SMS",
+      "real_or_synthetic": "REAL",
+      "labeling_method": "Enterprise DLT Gateway Logs + Expert Threat Intelligence Review",
+      "supported_languages": [
+        "en",
+        "hi",
+        "mr",
+        "hinglish"
+      ],
+      "unique_records": 103
     }
   ]
 }
