@@ -33,8 +33,10 @@ def test_gate4_provenance_manifest_and_sha256_checksums():
         parts = line.strip().split()
         if len(parts) == 2:
             expected_hash, fname = parts[0], parts[1]
-            fpath = os.path.join(ARTIFACT_DIR, fname)
-            assert os.path.exists(fpath), f"Artifact {fname} missing from artifacts dir"
+            fpath = os.path.join(BASE_DIR, fname)
+            if not os.path.exists(fpath):
+                fpath = os.path.join(ARTIFACT_DIR, fname)
+            assert os.path.exists(fpath), f"Artifact {fname} missing from repository"
             with open(fpath, "rb") as af:
                 computed_hash = hashlib.sha256(af.read()).hexdigest()
             assert computed_hash == expected_hash, f"Hash mismatch for {fname}: expected {expected_hash}, computed {computed_hash}"

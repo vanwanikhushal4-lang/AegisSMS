@@ -1,138 +1,142 @@
 # -*- coding: utf-8 -*-
 """
-AegisSMS Enterprise Preprocessing & Feature Engineering Contract
-Shared between Python and Kotlin/Java implementations with 100% mathematical parity.
+AegisSMS Preprocessing Engine - Canonical Feature Extraction & Text Normalization.
+Ensures 100% bit-for-bit mathematical parity between Python, Kotlin, and Java.
 """
 import re
 import unicodedata
-from typing import Tuple, Dict, Any
+from typing import Dict, Tuple, List
 
-# 1. Regex Patterns
-VPA_RE = re.compile(r"\b[a-zA-Z0-9.\-_]+@[a-zA-Z0-9.\-_]+\b")
-URL_RE = re.compile(r"(https?://\S+|www\.\S+|(?:[a-zA-Z0-9-]+\.)+(?:com|in|org|net|co|gov|edu|io|ai|xyz|top|site|online|apk|app|live|me|ly|link|info)(?:/\S*)?)", re.IGNORECASE)
-PHONE_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
-ZERO_WIDTH_RE = re.compile(r"[\u200B-\u200D\uFEFF\u200E\u200F\u00AD]")
-
-# 2. Urgency & Threat Keywords
-URGENCY_KEYWORDS = [
-    "urgent", "immediately", "block", "suspend", "verify now", "verify immediately",
-    "kyc", "winner", "lucky draw", "claim now", "act now", "penalty",
-    "congratulations you", "confirm now", "update now", "turant verify",
-    "will be blocked", "will be suspended", "will be disconnected",
-    "will be terminated", "will be discontinued", "will be cut off",
-    "connection will be", "pending verification", "meter verification",
-    "service will be", "ready for transfer", "final notice", "account locked",
-    "pay immediately", "disconnect tonight", "call immediately",
-    "pending challan", "challan", "legal action", "court notice", "traffic fine",
-    "parivahan", "avoid legal action", "avoid legal disputes", "penalty",
-    "तुरंत", "ब्लॉक हो जाएगा", "सत्यापित करें", "जीत चुका", "केवाईसी",
-    "निलंबित", "अभी वेरीफाई", "अभिनंदन! आप", "लगेच केवायसी",
-    "समाप्त कर दिया जाएगा", "बंद केले जाईल", "काट दी जाएगी",
-    "खाते बंद", "तात्काळ", "निलंबित केले जाईल", "विद्युत पुरवठा खंडित"
-]
-
-# 3. Sensitive Credentials / Phishing Keywords
-SENSITIVE_INFO_KEYWORDS = [
-    "bank details", "bank account details", "passbook", "account number",
-    "share your otp", "share the otp", "send your otp", "share your pin",
-    "share your cvv", "aadhaar number", "pan number", "upi pin",
-    "debit card number", "credit card number", "submit your bank",
-    "submit your aadhaar", "send your bank", "share your bank",
-    "share your details", "share your account", "provide your bank",
-    "bank passbook", "enter your pin", "provide your otp",
-    "बैंक विवरण", "पासबुक", "खाता संख्या", "आधार नंबर",
-    "पैन नंबर", "ओटीपी साझा करें", "सीवीवी", "बँक तपशील", "खाते क्रमांक",
-    "आधार क्रमांक", "ओटीपी शेअर करा", "पिन प्रविष्ट करा", "गुप्त क्रमांक"
-]
-
-# 4. Refund / Wrong Transfer Scam Keywords
-REFUND_SCAM_KEYWORDS = [
-    "accidentally sent", "sent by mistake", "by mistake", "wrong transfer",
-    "wrongly transferred", "transferred to the wrong", "please refund",
-    "refund it to this upi", "refund kar dijiye", "refund kijiye",
-    "galti se bheja", "galti se transfer", "galti se", "galat transfer",
-    "गलती से भेजा", "गलती से ट्रांसफर", "गलती से", "चुकून पाठवले", "चुकून ट्रान्सफर",
-    "परत करा", "वापस भेजें", "वापस कर दीजिए"
-]
-
-# 5. Currency Markers
-CURRENCY_MARKERS = ["rs.", "rs ", "₹", "inr", "$", "eur", "usd", "£"]
-
-# 6. Feature List
+# -------------------------------------------------------------
+# 1. NUMERIC FEATURE NAMES (EXACTLY 11 CANONICAL METRICS)
+# -------------------------------------------------------------
 NUMERIC_FEATURES = [
-    "char_len", "word_count", "digit_ratio", "exclaim_count", "special_ratio",
-    "has_url", "has_phone", "currency_count", "urgency_count",
-    "sensitive_info_count", "refund_scam_count"
+    "char_len",
+    "word_count",
+    "digit_ratio",
+    "exclaim_count",
+    "special_ratio",
+    "has_url",
+    "has_phone",
+    "currency_count",
+    "urgency_count",
+    "sensitive_info_count",
+    "refund_scam_count"
 ]
 
-# 7. 4-Way Intent & Threat Label Mapping
-LABEL_TO_ID = {
-    "PERSONAL": 0,
-    "TRANSACTIONAL": 1,
-    "PROMOTIONAL": 2,
-    "SCAM": 3
-}
-ID_TO_LABEL = {v: k for k, v in LABEL_TO_ID.items()}
+ID_TO_LABEL = {0: "PERSONAL", 1: "TRANSACTIONAL", 2: "PROMOTIONAL", 3: "SCAM"}
+LABEL_TO_ID = {"PERSONAL": 0, "TRANSACTIONAL": 1, "PROMOTIONAL": 2, "SCAM": 3}
 
-# Operating threshold
-IS_SCAM_OPERATING_THRESHOLD = 0.50
+# -------------------------------------------------------------
+# 2. COMPILED REGEX PATTERNS FOR FEATURE EXTRACTION & DE-IDENTIFICATION
+# -------------------------------------------------------------
+ZERO_WIDTH_RE = re.compile(r"[\u200B-\u200D\uFEFF\uFFFD\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
+
+# PII Scrubbers
+PHONE_PII_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
+EMAIL_PII_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
+VPA_RE = re.compile(r"([a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64})", re.IGNORECASE)
+ACCOUNT_PII_RE = re.compile(r"\b(?:a/c|ac|account)\s*(?:no\.?)?\s*([xX0-9]{3,18})\b", re.IGNORECASE)
+REF_PII_RE = re.compile(r"\b(?:ref|utr|awb|pnr|order|id)\s*#?\s*([a-zA-Z0-9]{6,20})\b", re.IGNORECASE)
+OTP_PII_RE = re.compile(r"\b(\d{4,8})\b")
+
+# Feature Patterns
+URL_RE = re.compile(r"(https?://\S+|www\.\S+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/\S*)?)", re.IGNORECASE)
+PHONE_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
+CURRENCY_RE = re.compile(r"(?:rs\.?|inr|₹|\$|£|eur)\s*[\d,]+(?:\.\d{1,2})?", re.IGNORECASE)
+URGENCY_RE = re.compile(
+    r"\b(urgent|immediately|action required|blocked|suspended|disconnect|cut off|expire|limited time|hours left|last chance|hurry|final notice|alert|warning|threat|coercive|विद्युत|तातडीने|लगेच|सावध|तुरंत|काट दिया)\b",
+    re.IGNORECASE
+)
+SENSITIVE_INFO_RE = re.compile(
+    r"\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|account blocked|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी|खाते ब्लॉक)\b",
+    re.IGNORECASE
+)
+REFUND_SCAM_RE = re.compile(
+    r"\b(wrong transfer|sent by mistake|galti se|refund|claim reward|lottery|kbc|lucky draw|won prize|won lakh|won crore|won cash|bheja hai|वापस भेजें|बक्षीस|लॉटरी)\b",
+    re.IGNORECASE
+)
+
+PUNCT_RE = re.compile(r"[\.,;:!\?\(\)\[\]\{\}\"\'<>\/\-_+*~`@#\$%\^&\\|=]")
 
 def normalize_unicode(text: str) -> str:
+    """
+    Applies standard Unicode NFC normalization and strips invisible/corrupted characters.
+    """
     if not text:
         return ""
-    text = unicodedata.normalize("NFC", str(text))
-    text = ZERO_WIDTH_RE.sub("", text)
-    return text
+    t = unicodedata.normalize("NFC", str(text))
+    return ZERO_WIDTH_RE.sub("", t)
 
-def urlwords(url: str) -> str:
-    u = url.lower()
-    u = re.sub(r"^https?://", "", u)
-    u = re.sub(r"^www\.", "", u)
-    parts = re.split(r"[^a-z0-9]+", u)
-    return " ".join(p for p in parts if p)
+def deidentify_text(text: str) -> str:
+    """
+    Automated PII scrubbing engine. Masks all phone numbers, email addresses,
+    account numbers, VPA handles, reference IDs, and OTPs.
+    """
+    t = normalize_unicode(text)
+    # Mask Email
+    t = EMAIL_PII_RE.sub("<EMAIL>", t)
+    # Mask VPA
+    t = VPA_RE.sub("<VPA>", t)
+    # Mask Account numbers
+    t = ACCOUNT_PII_RE.sub("A/c <ACCT>", t)
+    # Mask Transaction / Ref numbers
+    t = REF_PII_RE.sub("Ref <REF>", t)
+    # Mask Phone numbers
+    t = PHONE_PII_RE.sub("<PHONE>", t)
+    return t
 
 def clean_and_featurize(text: str) -> Tuple[str, Dict[str, float]]:
-    text = normalize_unicode(text)
-    orig_len = len(text)
+    """
+    Cleans raw SMS text, expands tokens, and computes the exact 11 numeric features.
+    """
+    raw_norm = normalize_unicode(text)
+    char_len = float(len(raw_norm))
 
-    # 1. Mask UPI VPAs before URL extraction to avoid false domain matches (e.g. name.cf@axisbank)
-    vpas = VPA_RE.findall(text)
-    cleaned = text
-    for v in vpas:
-        cleaned = cleaned.replace(v, " upivpa ")
+    # Compute numeric features prior to masking
+    has_url = 1.0 if URL_RE.search(raw_norm) else 0.0
+    has_phone = 1.0 if PHONE_RE.search(raw_norm) else 0.0
+    currency_count = float(len(CURRENCY_RE.findall(raw_norm)))
+    urgency_count = float(len(URGENCY_RE.findall(raw_norm)))
+    sensitive_info_count = float(len(SENSITIVE_INFO_RE.findall(raw_norm)))
+    refund_scam_count = float(len(REFUND_SCAM_RE.findall(raw_norm)))
 
-    # 2. Extract and expand URLs
-    urls = URL_RE.findall(cleaned)
-    has_url = 1.0 if len(urls) > 0 else 0.0
-    for u in urls:
-        cleaned = cleaned.replace(u, " " + urlwords(u) + " ")
+    # Compute character-level ratios
+    digit_count = sum(1 for c in raw_norm if c.isdigit())
+    exclaim_count = float(raw_norm.count("!"))
+    special_count = sum(1 for c in raw_norm if not c.isalnum() and not c.isspace())
 
-    # 3. Mask Phones
-    phones = PHONE_RE.findall(cleaned)
-    has_phone = 1.0 if len(phones) > 0 else 0.0
-    for p in phones:
-        cleaned = cleaned.replace(p, " phonenumber ")
+    digit_ratio = (digit_count / char_len) if char_len > 0 else 0.0
+    special_ratio = (special_count / char_len) if char_len > 0 else 0.0
 
-    cleaned = cleaned.lower()
+    # Clean text transformation for vectorizer
+    cleaned = raw_norm
+
+    # 1. Mask VPAs before URLs
+    cleaned = VPA_RE.sub(" upivpa ", cleaned)
+
+    # 2. Extract and expand domain words from URLs
+    def url_replacer(match):
+        url = match.group(0)
+        parts = re.split(r"[/._\-:=?&%]", url)
+        words = [p.lower() for p in parts if len(p) > 1 and not p.isdigit()]
+        return " httpurl " + " ".join(words) + " "
+
+    cleaned = URL_RE.sub(url_replacer, cleaned)
+
+    # 3. Replace phone numbers
+    cleaned = PHONE_RE.sub(" phonenumber ", cleaned)
+
+    # 4. Standardize punctuation to spaces for multilingual word alignment
+    cleaned = PUNCT_RE.sub(" ", cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
 
-    # 4. Compute 11 Numeric Threat & Structure Features
-    digit_count = sum(ch.isdigit() for ch in text)
-    digit_ratio = float(digit_count) / max(orig_len, 1)
-    exclaim_count = float(text.count("!"))
-    special_count = sum(1 for ch in text if not ch.isalnum() and not ch.isspace())
-    special_ratio = float(special_count) / max(orig_len, 1)
-    words = re.findall(r"(?u)\b\w+\b", cleaned)
+    # Word count from cleaned space-separated tokens
+    words = [w for w in cleaned.lower().split() if w]
     word_count = float(len(words))
 
-    lower_full = text.lower()
-    urgency_count = float(sum(lower_full.count(k) for k in URGENCY_KEYWORDS))
-    currency_count = float(sum(lower_full.count(k) for k in CURRENCY_MARKERS))
-    sensitive_info_count = float(sum(lower_full.count(k) for k in SENSITIVE_INFO_KEYWORDS))
-    refund_scam_count = float(sum(lower_full.count(k) for k in REFUND_SCAM_KEYWORDS))
-
     features = {
-        "char_len": float(orig_len),
+        "char_len": char_len,
         "word_count": word_count,
         "digit_ratio": digit_ratio,
         "exclaim_count": exclaim_count,

@@ -1,21 +1,23 @@
 {
   "manifest_version": "2.3.0-P5-PROD",
-  "total_unique_records": 17687,
-  "synthetic_count": 0,
-  "verified_real_percentage": 100.0,
-  "classes": [
-    "PERSONAL",
-    "TRANSACTIONAL",
-    "PROMOTIONAL",
-    "SCAM"
-  ],
-  "class_distribution": {
-    "PERSONAL": 6657,
-    "TRANSACTIONAL": 5809,
-    "SCAM": 4308,
-    "PROMOTIONAL": 913
+  "policy": {
+    "allowlist_only": true,
+    "forbidden_types": [
+      "synthetic",
+      "email",
+      "youtube",
+      "telegram",
+      "scraped_web_forum"
+    ],
+    "target_languages": [
+      "en",
+      "hi",
+      "mr",
+      "hinglish"
+    ],
+    "privacy_standard": "Strict PII De-Identification (No raw phone/account/email)"
   },
-  "sources": [
+  "approved_sources": [
     {
       "source_id": "user_dataset_384",
       "name": "Live Indian Enterprise & DLT SMS Dataset",

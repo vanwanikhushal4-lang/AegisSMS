@@ -1,77 +1,47 @@
 package com.payshield.aegissms;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
+/**
+ * Production AegisSMS 4-Way Intent & Threat Classifier for Java / Android.
+ * Zero external ML dependencies. Direct evaluation of TF-IDF n-grams + 11 numeric features.
+ */
 public class AegisSmsClassifier {
 
-    private static final Pattern VPA_RE = Pattern.compile("\\b[a-zA-Z0-9.\\-_]+@[a-zA-Z0-9.\\-_]+\\b");
-    private static final Pattern URL_RE = Pattern.compile(
-        "(https?://\\S+|www\\.\\S+|(?:[a-zA-Z0-9-]+\\.)+(?:com|in|org|net|co|gov|edu|io|ai|xyz|top|site|online|apk|app|live|me|ly|link|info)(?:/\\S*)?)",
+    public static final String[] CLASSES = new String[]{"PERSONAL", "TRANSACTIONAL", "PROMOTIONAL", "SCAM"};
+
+    private static final Pattern ZERO_WIDTH_RE = Pattern.compile("[\u200B-\u200D\uFEFF\uFFFD\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]");
+    private static final Pattern VPA_RE = Pattern.compile("([a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64})", Pattern.CASE_INSENSITIVE);
+    private static final Pattern URL_RE = Pattern.compile("(https?://\\S+|www\\.\\S+|[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(?:/\\S*)?)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern PHONE_RE = Pattern.compile("(\\+?\\d[\\d\\- ]{7,}\\d)");
+    private static final Pattern CURRENCY_RE = Pattern.compile("(?:rs\\.?|inr|₹|\\$|£|eur)\\s*[\\d,]+(?:\\.\\d{1,2})?", Pattern.CASE_INSENSITIVE);
+    private static final Pattern URGENCY_RE = Pattern.compile(
+        "\\b(urgent|immediately|action required|blocked|suspended|disconnect|cut off|expire|limited time|hours left|last chance|hurry|final notice|alert|warning|threat|coercive|विद्युत|तातडीने|लगेच|सावध|तुरंत|काट दिया)\\b",
         Pattern.CASE_INSENSITIVE
     );
-    private static final Pattern PHONE_RE = Pattern.compile("(\\+?\\d[\\d\\- ]{7,}\\d)");
-    private static final Pattern ZERO_WIDTH_RE = Pattern.compile("[\\u200B-\\u200D\\uFEFF\\u200E\\u200F\\u00AD]");
-    private static final Pattern TOKEN_RE = Pattern.compile("[\\p{L}\\p{N}_]+");
+    private static final Pattern SENSITIVE_INFO_RE = Pattern.compile(
+        "\\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|account blocked|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी|खाते ब्लॉक)\\b",
+        Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern REFUND_SCAM_RE = Pattern.compile(
+        "\\b(wrong transfer|sent by mistake|galti se|refund|claim reward|lottery|kbc|lucky draw|won prize|won lakh|won crore|won cash|bheja hai|वापस भेजें|बक्षीस|लॉटरी)\\b",
+        Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern PUNCT_RE = Pattern.compile("[\\.,;:!\\?\\(\\)\\[\\]\\{\\}\"\'<>\\/\\-_+*~`@#\\$%\\^&\\\\|=]");
 
-    private static final String[] URGENCY_KEYWORDS = {
-        "urgent", "immediately", "block", "suspend", "verify now", "verify immediately",
-        "kyc", "winner", "lucky draw", "claim now", "act now", "penalty",
-        "congratulations you", "confirm now", "update now", "turant verify",
-        "will be blocked", "will be suspended", "will be disconnected",
-        "will be terminated", "will be discontinued", "will be cut off",
-        "connection will be", "pending verification", "meter verification",
-        "service will be", "ready for transfer", "final notice", "account locked",
-        "pay immediately", "disconnect tonight", "call immediately",
-        "pending challan", "challan", "legal action", "court notice", "traffic fine",
-        "parivahan", "avoid legal action", "avoid legal disputes", "penalty",
-        "तुरंत", "ब्लॉक हो जाएगा", "सत्यापित करें", "जीत चुका", "केवाईसी",
-        "निलंबित", "अभी वेरीफाई", "अभिनंदन! आप", "लगेच केवायसी",
-        "समाप्त कर दिया जाएगा", "बंद केले जाईल", "काट दी जाएगी",
-        "खाते बंद", "तात्काळ", "निलंबित केले जाईल", "विद्युत पुरवठा खंडित"
-    };
-
-    private static final String[] SENSITIVE_INFO_KEYWORDS = {
-        "bank details", "bank account details", "passbook", "account number",
-        "share your otp", "share the otp", "send your otp", "share your pin",
-        "share your cvv", "aadhaar number", "pan number", "upi pin",
-        "debit card number", "credit card number", "submit your bank",
-        "submit your aadhaar", "send your bank", "share your bank",
-        "share your details", "share your account", "provide your bank",
-        "bank passbook", "enter your pin", "provide your otp",
-        "बैंक विवरण", "पासबुक", "खाता संख्या", "आधार नंबर",
-        "पैन नंबर", "ओटीपी साझा करें", "सीवीवी", "बँक तपशील", "खाते क्रमांक",
-        "आधार क्रमांक", "ओटीपी शेअर करा", "पिन प्रविष्ट करा", "गुप्त क्रमांक"
-    };
-
-    private static final String[] REFUND_SCAM_KEYWORDS = {
-        "accidentally sent", "sent by mistake", "by mistake", "wrong transfer",
-        "wrongly transferred", "transferred to the wrong", "please refund",
-        "refund it to this upi", "refund kar dijiye", "refund kijiye",
-        "galti se bheja", "galti se transfer", "galti se", "galat transfer",
-        "गलती से भेजा", "गलती से ट्रांसफर", "गलती से", "चुकून पाठवले", "चुकून ट्रान्सफर",
-        "परत करा", "वापस भेजें", "वापस कर दीजिए"
-    };
-
-    private static final String[] CURRENCY_MARKERS = {"rs.", "rs ", "₹", "inr", "$", "eur", "usd", "£"};
-
-    public static final String[] NUMERIC_FEATURES = {
-        "char_len", "word_count", "digit_ratio", "exclaim_count", "special_ratio",
-        "has_url", "has_phone", "currency_count", "urgency_count",
-        "sensitive_info_count", "refund_scam_count"
-    };
-
-    public static final String[] CLASSES = {"PERSONAL", "TRANSACTIONAL", "PROMOTIONAL", "SCAM"};
-
-    private final double isScamThreshold;
-    private final Map<String, int[]> vocabIndexMap;
-    private final Map<String, Double> vocabIdfMap;
-    private final double[] numericMeans;
-    private final double[] numericStds;
-    private final double[][] weights;
-    private final double[] bias;
+    public final double isScamThreshold;
+    public final Map<String, int[]> vocabIndexMap;
+    public final Map<String, Double> vocabIdfMap;
+    public final double[] numericMeans;
+    public final double[] numericStds;
+    public final double[][] weights;
+    public final double[] bias;
 
     public AegisSmsClassifier(
         double isScamThreshold,
@@ -105,195 +75,163 @@ public class AegisSmsClassifier {
         }
     }
 
-    public static String urlwords(String url) {
-        String u = url.toLowerCase();
-        u = u.replaceFirst("^https?://", "");
-        u = u.replaceFirst("^www\\.", "");
-        String[] parts = u.split("[^a-z0-9]+");
-        StringBuilder sb = new StringBuilder();
-        for (String p : parts) {
-            if (!p.isEmpty()) {
-                if (sb.length() > 0) sb.append(" ");
-                sb.append(p);
-            }
-        }
-        return sb.toString();
+    private static double countMatches(Matcher matcher) {
+        int count = 0;
+        while (matcher.find()) count++;
+        return (double) count;
     }
 
     public static Object[] cleanAndFeaturize(String text) {
-        if (text == null) text = "";
-        String t = Normalizer.normalize(text, Normalizer.Form.NFC);
-        t = ZERO_WIDTH_RE.matcher(t).replaceAll("");
-        int origLen = Math.max(1, t.length());
+        String rawNorm = Normalizer.normalize(text != null ? text : "", Normalizer.Form.NFC);
+        rawNorm = ZERO_WIDTH_RE.matcher(rawNorm).replaceAll("");
+        double charLen = (double) rawNorm.length();
 
-        // 1. Mask VPAs
-        Matcher vpaMatcher = VPA_RE.matcher(t);
-        List<String> vpas = new ArrayList<>();
-        while (vpaMatcher.find()) {
-            vpas.add(vpaMatcher.group());
-        }
-        String cleaned = t;
-        for (String v : vpas) {
-            cleaned = cleaned.replace(v, " upivpa ");
-        }
-
-        // 2. Extract and expand URLs
-        Matcher urlMatcher = URL_RE.matcher(cleaned);
-        List<String> urls = new ArrayList<>();
-        while (urlMatcher.find()) {
-            urls.add(urlMatcher.group());
-        }
-        double hasUrl = urls.isEmpty() ? 0.0 : 1.0;
-        for (String u : urls) {
-            cleaned = cleaned.replace(u, " " + urlwords(u) + " ");
-        }
-
-        // 3. Mask Phones
-        Matcher phoneMatcher = PHONE_RE.matcher(cleaned);
-        List<String> phones = new ArrayList<>();
-        while (phoneMatcher.find()) {
-            phones.add(phoneMatcher.group());
-        }
-        double hasPhone = phones.isEmpty() ? 0.0 : 1.0;
-        for (String p : phones) {
-            cleaned = cleaned.replace(p, " phonenumber ");
-        }
-
-        cleaned = cleaned.toLowerCase().replaceAll("\\s+", " ").trim();
-
-        // 4. Extract word tokens
-        List<String> words = new ArrayList<>();
-        Matcher tokenMatcher = TOKEN_RE.matcher(cleaned);
-        while (tokenMatcher.find()) {
-            words.add(tokenMatcher.group());
-        }
-        double wordCount = words.size();
+        double hasUrl = URL_RE.matcher(rawNorm).find() ? 1.0 : 0.0;
+        double hasPhone = PHONE_RE.matcher(rawNorm).find() ? 1.0 : 0.0;
+        double currencyCount = countMatches(CURRENCY_RE.matcher(rawNorm));
+        double urgencyCount = countMatches(URGENCY_RE.matcher(rawNorm));
+        double sensitiveCount = countMatches(SENSITIVE_INFO_RE.matcher(rawNorm));
+        double refundCount = countMatches(REFUND_SCAM_RE.matcher(rawNorm));
 
         int digitCount = 0;
-        int exclaimCount = 0;
+        double exclaimCount = 0.0;
         int specialCount = 0;
-        for (int i = 0; i < t.length(); i++) {
-            char ch = t.charAt(i);
+        for (int i = 0; i < rawNorm.length(); i++) {
+            char ch = rawNorm.charAt(i);
             if (Character.isDigit(ch)) digitCount++;
             if (ch == '!') exclaimCount++;
             if (!Character.isLetterOrDigit(ch) && !Character.isWhitespace(ch)) specialCount++;
         }
-        double digitRatio = (double) digitCount / origLen;
-        double specialRatio = (double) specialCount / origLen;
 
-        String lowerFull = t.toLowerCase();
-        double urgencyCount = 0;
-        for (String k : URGENCY_KEYWORDS) {
-            urgencyCount += countOccurrences(lowerFull, k.toLowerCase());
-        }
-        double currencyCount = 0;
-        for (String k : CURRENCY_MARKERS) {
-            currencyCount += countOccurrences(lowerFull, k.toLowerCase());
-        }
-        double sensitiveCount = 0;
-        for (String k : SENSITIVE_INFO_KEYWORDS) {
-            sensitiveCount += countOccurrences(lowerFull, k.toLowerCase());
-        }
-        double refundCount = 0;
-        for (String k : REFUND_SCAM_KEYWORDS) {
-            refundCount += countOccurrences(lowerFull, k.toLowerCase());
-        }
+        double digitRatio = charLen > 0 ? (double) digitCount / charLen : 0.0;
+        double specialRatio = charLen > 0 ? (double) specialCount / charLen : 0.0;
 
-        double[] numeric = new double[] {
-            (double) origLen, wordCount, digitRatio, (double) exclaimCount, specialRatio,
+        String cleaned = rawNorm;
+        cleaned = VPA_RE.matcher(cleaned).replaceAll(" upivpa ");
+
+        Matcher urlMatcher = URL_RE.matcher(cleaned);
+        StringBuffer sb = new StringBuffer();
+        while (urlMatcher.find()) {
+            String url = urlMatcher.group(0);
+            String[] parts = url.split("[/._\\-:=?&%]");
+            StringBuilder wordsBuilder = new StringBuilder();
+            for (String p : parts) {
+                if (p.length() > 1 && !p.matches("\\d+")) {
+                    if (wordsBuilder.length() > 0) wordsBuilder.append(" ");
+                    wordsBuilder.append(p.toLowerCase());
+                }
+            }
+            String repl = " httpurl " + wordsBuilder.toString() + " ";
+            urlMatcher.appendReplacement(sb, Matcher.quoteReplacement(repl));
+        }
+        urlMatcher.appendTail(sb);
+        cleaned = sb.toString();
+
+        cleaned = PHONE_RE.matcher(cleaned).replaceAll(" phonenumber ");
+        cleaned = PUNCT_RE.matcher(cleaned).replaceAll(" ");
+        cleaned = cleaned.replaceAll("\\s+", " ").trim();
+
+        List<String> words = new ArrayList<>();
+        if (!cleaned.isEmpty()) {
+            for (String w : cleaned.toLowerCase().split("\\s+")) {
+                if (!w.isEmpty()) words.add(w);
+            }
+        }
+        double wordCount = (double) words.size();
+
+        double[] rawNumeric = new double[]{
+            charLen, wordCount, digitRatio, exclaimCount, specialRatio,
             hasUrl, hasPhone, currencyCount, urgencyCount, sensitiveCount, refundCount
         };
 
-        return new Object[] { cleaned, numeric, words };
+        return new Object[]{cleaned, rawNumeric, words};
     }
 
-    private static int countOccurrences(String text, String sub) {
-        int count = 0;
-        int idx = 0;
-        while ((idx = text.indexOf(sub, idx)) != -1) {
-            count++;
-            idx += sub.length();
-        }
-        return count;
-    }
-
-    public PredictionResult predict(String rawText) {
-        Object[] pre = cleanAndFeaturize(rawText);
-        String cleaned = (String) pre[0];
-        double[] rawNumeric = (double[]) pre[1];
+    public PredictionResult predict(String text) {
+        Object[] cf = cleanAndFeaturize(text);
+        String cleanedText = (String) cf[0];
+        double[] rawNumeric = (double[]) cf[1];
         @SuppressWarnings("unchecked")
-        List<String> words = (List<String>) pre[2];
+        List<String> words = (List<String>) cf[2];
 
-        Map<String, Integer> termCounts = new HashMap<>();
+        // 1. Extract 1-3 grams
+        Map<String, Integer> ngramCounts = new HashMap<>();
         int nWords = words.size();
         for (int n = 1; n <= 3; n++) {
             for (int i = 0; i <= nWords - n; i++) {
                 StringBuilder sb = new StringBuilder();
-                for (int j = i; j < i + n; j++) {
-                    if (j > i) sb.append(" ");
-                    sb.append(words.get(j));
+                for (int j = 0; j < n; j++) {
+                    if (j > 0) sb.append(" ");
+                    sb.append(words.get(i + j));
                 }
                 String term = sb.toString();
                 if (vocabIndexMap.containsKey(term)) {
-                    termCounts.put(term, termCounts.getOrDefault(term, 0) + 1);
+                    ngramCounts.put(term, ngramCounts.getOrDefault(term, 0) + 1);
                 }
             }
         }
 
+        // 2. Compute sublinear TF-IDF and L2 norm
         double l2Sum = 0.0;
-        List<int[]> sparseIndices = new ArrayList<>();
-        List<Double> sparseValues = new ArrayList<>();
-
-        for (Map.Entry<String, Integer> e : termCounts.entrySet()) {
-            String term = e.getKey();
-            int cnt = e.getValue();
+        List<Map.Entry<Integer, Double>> sparseEntries = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : ngramCounts.entrySet()) {
+            String term = entry.getKey();
+            int count = entry.getValue();
             int idx = vocabIndexMap.get(term)[0];
             double idf = vocabIdfMap.get(term);
-            double tf = 1.0 + Math.log(cnt);
+            double tf = 1.0 + Math.log((double) count);
             double tfidf = tf * idf;
-            sparseIndices.add(new int[] { idx });
-            sparseValues.add(tfidf);
+            sparseEntries.add(new AbstractMap.SimpleEntry<>(idx, tfidf));
             l2Sum += tfidf * tfidf;
         }
 
         double l2Norm = l2Sum > 0.0 ? Math.sqrt(l2Sum) : 1.0;
 
-        double[] logits = new double[4];
+        // 3. Compute Logits
+        double[] logits = bias.clone();
+        int numFeaturesOffset = weights[0].length - 11;
+
         for (int c = 0; c < 4; c++) {
-            logits[c] = bias[c];
-            for (int k = 0; k < sparseIndices.size(); k++) {
-                int idx = sparseIndices.get(k)[0];
-                double val = sparseValues.get(k) / l2Norm;
+            for (Map.Entry<Integer, Double> entry : sparseEntries) {
+                int idx = entry.getKey();
+                double val = entry.getValue() / l2Norm;
                 logits[c] += weights[c][idx] * val;
             }
             for (int f = 0; f < rawNumeric.length; f++) {
                 double scaled = (rawNumeric[f] - numericMeans[f]) / numericStds[f];
-                int colIdx = vocabIndexMap.size() + f;
+                int colIdx = numFeaturesOffset + f;
                 logits[c] += weights[c][colIdx] * scaled;
             }
         }
 
-        double maxLogit = Math.max(Math.max(logits[0], logits[1]), Math.max(logits[2], logits[3]));
-        double sumExp = 0.0;
+        // 4. Softmax
+        double maxLogit = logits[0];
+        for (int i = 1; i < 4; i++) {
+            if (logits[i] > maxLogit) maxLogit = logits[i];
+        }
         double[] expLogits = new double[4];
-        for (int c = 0; c < 4; c++) {
-            expLogits[c] = Math.exp(logits[c] - maxLogit);
-            sumExp += expLogits[c];
+        double sumExp = 0.0;
+        for (int i = 0; i < 4; i++) {
+            expLogits[i] = Math.exp(logits[i] - maxLogit);
+            sumExp += expLogits[i];
+        }
+        double[] probs = new double[4];
+        for (int i = 0; i < 4; i++) {
+            probs[i] = expLogits[i] / sumExp;
         }
 
-        double[] probs = new double[4];
+        // 5. Decision
         int maxIdx = 0;
-        for (int c = 0; c < 4; c++) {
-            probs[c] = expLogits[c] / sumExp;
-            if (probs[c] > probs[maxIdx]) maxIdx = c;
+        for (int i = 1; i < 4; i++) {
+            if (probs[i] > probs[maxIdx]) maxIdx = i;
         }
 
         String predLabel = CLASSES[maxIdx];
-        boolean isScam = (predLabel.equals("SCAM") || probs[3] >= isScamThreshold);
+        boolean isScam = predLabel.equals("SCAM") || probs[3] >= isScamThreshold;
 
         Map<String, Double> probMap = new LinkedHashMap<>();
-        for (int c = 0; c < 4; c++) {
-            probMap.put(CLASSES[c], probs[c]);
+        for (int i = 0; i < 4; i++) {
+            probMap.put(CLASSES[i], probs[i]);
         }
 
         return new PredictionResult(predLabel, isScam, probs[maxIdx], probMap);

@@ -32,6 +32,7 @@ object KotlinParityRunner {
         var maxDelta = 0.0
         var categoryMismatches = 0
         var scamDecisionMismatches = 0
+        var printedMismatches = 0
 
         for (i in 0 until goldenArray.length()) {
             count++
@@ -59,6 +60,14 @@ object KotlinParityRunner {
                 }
             }
 
+            if (localMaxDelta > 1e-4 && printedMismatches < 3) {
+                printedMismatches++
+                println("Mismatch at $vecId: localMaxDelta=$localMaxDelta")
+                println("  Text: $rawText")
+                println("  Py Probs: $pyProbs")
+                println("  KT Probs: ${result.probabilities}")
+            }
+
             if (localMaxDelta > maxDelta) {
                 maxDelta = localMaxDelta
             }
@@ -76,7 +85,6 @@ object KotlinParityRunner {
                 categoryMismatches++
             }
 
-            // Calibrated production is_scam rule
             val pyIsScam = (maxPyClass == "SCAM" || (pyProbs["SCAM"] ?: 0.0) >= 0.69)
             if (result.isScam != pyIsScam) {
                 scamDecisionMismatches++

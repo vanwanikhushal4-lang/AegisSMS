@@ -1,113 +1,50 @@
 {
-  "model_version": "2.4.0-P5-RELEASE",
-  "taxonomy": [
-    "PERSONAL",
-    "TRANSACTIONAL",
-    "PROMOTIONAL",
-    "SCAM"
-  ],
-  "total_dataset_size": 32430,
-  "test_samples": 3854,
-  "dataset_type": "100% Real SMS Traffic (0% Synthetic Data)",
-  "synthetic_used": false,
+  "model_version": "2.3.0-P5-PROD",
+  "evaluation_type": "Blind Template-Family Isolated Holdout Split",
+  "total_test_samples": 2123,
   "is_scam_operating_threshold": 0.69,
-  "test_accuracy": 0.922677737415672,
-  "overall_legit_to_scam_fpr": 0.00228310502283105,
-  "overall_scam_recall": 0.9746192893401016,
-  "overall_scam_precision": 0.9909677419354839,
-  "max_measured_parity_delta": 9.028131175981002e-08,
-  "class_metrics": {
-    "PERSONAL": {
-      "precision": 0.8084648493543759,
-      "recall": 0.9885964912280701,
-      "f1": 0.8895027624309392,
-      "support": 1140,
-      "ci_95": [
-        0.9805874593604005,
-        0.9933237338468636
-      ]
-    },
-    "TRANSACTIONAL": {
-      "precision": 0.9914285714285714,
-      "recall": 0.8422330097087378,
-      "f1": 0.910761154855643,
-      "support": 1648,
-      "ci_95": [
-        0.8238403632322507,
-        0.8590338883955766
-      ]
-    },
-    "PROMOTIONAL": {
-      "precision": 0.9888888888888889,
-      "recall": 0.960431654676259,
-      "f1": 0.9744525547445255,
-      "support": 278,
-      "ci_95": [
-        0.9305476776386767,
-        0.977764396359158
-      ]
-    },
-    "SCAM": {
-      "precision": 0.9909677419354839,
-      "recall": 0.9746192893401016,
-      "f1": 0.9827255278310941,
-      "support": 788,
-      "ci_95": [
-        0.9611227591495208,
-        0.9835107803900884
-      ]
-    }
+  "metrics": {
+    "overall_accuracy": 0.9689,
+    "scam_precision": 0.9961,
+    "scam_recall": 0.9884,
+    "legitimate_fpr": 0.0012,
+    "true_positives": 510,
+    "false_positives": 2,
+    "false_negatives": 6,
+    "true_negatives": 1605
   },
-  "per_language_metrics": {
-    "en": {
-      "total_samples": 3564,
-      "legit_samples": 2886,
-      "scam_samples": 678,
-      "false_positive_rate": 0.002079002079002079,
-      "scam_recall": 0.9778761061946902,
-      "fp_count": 6
-    },
-    "hinglish": {
-      "total_samples": 278,
-      "legit_samples": 168,
-      "scam_samples": 110,
-      "false_positive_rate": 0.005952380952380952,
-      "scam_recall": 0.9545454545454546,
-      "fp_count": 1
-    },
-    "mr": {
-      "total_samples": 12,
-      "legit_samples": 12,
-      "scam_samples": 0,
-      "false_positive_rate": 0.0,
-      "scam_recall": 0.0,
-      "fp_count": 0
-    }
-  },
-  "confusion_matrix": [
-    [
-      1127,
-      3,
-      3,
-      7
+  "confusion_matrix_4way": {
+    "labels": [
+      "PERSONAL",
+      "TRANSACTIONAL",
+      "PROMOTIONAL",
+      "SCAM"
     ],
-    [
-      254,
-      1388,
-      0,
-      6
-    ],
-    [
-      5,
-      3,
-      267,
-      3
-    ],
-    [
-      8,
-      6,
-      0,
-      774
+    "matrix": [
+      [
+        797,
+        3,
+        1,
+        1
+      ],
+      [
+        51,
+        645,
+        1,
+        0
+      ],
+      [
+        1,
+        1,
+        105,
+        1
+      ],
+      [
+        5,
+        1,
+        0,
+        510
+      ]
     ]
-  ]
+  }
 }

@@ -1,38 +1,42 @@
 {
   "cloveai_india_spam_sms": {
-    "sample_count": 1979,
-    "accuracy": 0.9965,
-    "scam_recall": 1.0,
-    "legitimate_fpr": 0.0
-  },
-  "codesignal_sms_spam": {
-    "sample_count": 1,
-    "accuracy": 1.0,
+    "source_id": "cloveai_india_spam_sms",
+    "sample_count": 759,
+    "accuracy": 0.9934,
+    "scam_precision": 1.0,
     "scam_recall": 1.0,
     "legitimate_fpr": 0.0
   },
   "dataset_5971_real": {
-    "sample_count": 675,
-    "accuracy": 0.8904,
-    "scam_recall": 0.8548,
-    "legitimate_fpr": 0.0147
+    "source_id": "dataset_5971_real",
+    "sample_count": 663,
+    "accuracy": 0.911,
+    "scam_precision": 0.9892,
+    "scam_recall": 0.9388,
+    "legitimate_fpr": 0.0018
   },
   "electricsheep_africa_smishing": {
-    "sample_count": 1002,
-    "accuracy": 1.0,
+    "source_id": "electricsheep_africa_smishing",
+    "sample_count": 656,
+    "accuracy": 0.9985,
+    "scam_precision": 1.0,
     "scam_recall": 1.0,
     "legitimate_fpr": 0.0
   },
   "uci_sms_spam_collection": {
-    "sample_count": 32,
-    "accuracy": 0.75,
+    "source_id": "uci_sms_spam_collection",
+    "sample_count": 19,
+    "accuracy": 0.9474,
+    "scam_precision": 0.8333,
     "scam_recall": 1.0,
-    "legitimate_fpr": 0.0625
+    "legitimate_fpr": 0.0714
   },
   "user_dataset_384": {
-    "sample_count": 38,
-    "accuracy": 0.9211,
+    "source_id": "user_dataset_384",
+    "sample_count": 26,
+    "accuracy": 1.0,
+    "scam_precision": 1.0,
     "scam_recall": 1.0,
-    "legitimate_fpr": 0.0263
+    "legitimate_fpr": 0.0
   }
 }
