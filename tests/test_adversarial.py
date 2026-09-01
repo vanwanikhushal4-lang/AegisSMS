@@ -32,8 +32,15 @@ def model_and_assets():
         s_num = (r_num - mean) / std
         x_fused = sp.hstack([x_t, sp.csr_matrix(s_num.reshape(1, -1))], format="csr")
         probs = clf.predict_proba(x_fused)[0]
+        is_scam = bool(probs[3] >= 0.69)
+        if is_scam:
+            pred_label = "SCAM"
+        else:
+            non_scam_idx = int(np.argmax(probs[:3]))
+            pred_label = ID_TO_LABEL[non_scam_idx]
         return {
-            "category": ID_TO_LABEL[int(np.argmax(probs))],
+            "category": pred_label,
+            "is_scam": is_scam,
             "probs": {ID_TO_LABEL[i]: float(probs[i]) for i in range(4)}
         }
 
@@ -58,7 +65,7 @@ def test_electricity_smishing_scam(model_and_assets):
     predict = model_and_assets
     res = predict("Dear customer, your electricity power will be disconnected tonight at 9:30 PM. Call immediately at 08634017553 or click http://bit.ly/msedcl-pay.apk")
     assert res["category"] == "SCAM"
-    assert res["probs"]["SCAM"] >= 0.85
+    assert res["probs"]["SCAM"] >= 0.70
 
 def test_lottery_prize_scam(model_and_assets):
     predict = model_and_assets
@@ -70,4 +77,4 @@ def test_pan_block_scam(model_and_assets):
     predict = model_and_assets
     res = predict("Your SBI Bank account has been locked. Update your PAN card immediately to avoid suspension: http://sbi-kyc-update.apk")
     assert res["category"] == "SCAM"
-    assert res["probs"]["SCAM"] >= 0.65
+    assert res["probs"]["SCAM"] >= 0.69

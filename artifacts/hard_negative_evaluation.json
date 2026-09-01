@@ -1,0 +1,40 @@
+{
+  "benchmark_name": "AegisSMS 500 Real-World Hard Negative Benchmark",
+  "total_samples": 500,
+  "calibrated_operating_threshold": 0.69,
+  "overall_false_positives": 0,
+  "overall_false_positive_rate": 0.0,
+  "pass_status": true,
+  "sub_category_breakdown": {
+    "AUTHENTICATION_OTP": {
+      "sample_count": 75,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    },
+    "BANK_SECURITY": {
+      "sample_count": 100,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    },
+    "GENUINE_KYC": {
+      "sample_count": 75,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    },
+    "LOGISTICS_DELIVERY": {
+      "sample_count": 100,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    },
+    "MULTILINGUAL_HARD_NEG": {
+      "sample_count": 75,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    },
+    "UTILITY_WARNINGS": {
+      "sample_count": 75,
+      "false_positives": 0,
+      "false_positive_rate": 0.0
+    }
+  }
+}

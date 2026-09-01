@@ -1,34 +1,34 @@
 {
   "en": {
-    "sample_count": 1921,
-    "scam_count": 453,
-    "legit_count": 1468,
-    "scam_precision": 0.9955,
-    "scam_recall": 0.9868,
-    "legitimate_fpr": 0.0014
+    "sample_count": 638,
+    "scam_count": 65,
+    "legit_count": 573,
+    "scam_precision": 0.9796,
+    "scam_recall": 0.7385,
+    "legitimate_fpr": 0.0017
   },
   "hi": {
-    "sample_count": 4,
-    "scam_count": 2,
+    "sample_count": 3,
+    "scam_count": 1,
     "legit_count": 2,
     "scam_precision": 1.0,
     "scam_recall": 1.0,
     "legitimate_fpr": 0.0
   },
   "hinglish": {
-    "sample_count": 194,
-    "scam_count": 61,
-    "legit_count": 133,
-    "scam_precision": 1.0,
-    "scam_recall": 1.0,
-    "legitimate_fpr": 0.0
+    "sample_count": 97,
+    "scam_count": 9,
+    "legit_count": 88,
+    "scam_precision": 0.75,
+    "scam_recall": 0.6667,
+    "legitimate_fpr": 0.0227
   },
   "mr": {
-    "sample_count": 4,
-    "scam_count": 0,
-    "legit_count": 4,
-    "scam_precision": "N/A",
-    "scam_recall": "N/A",
+    "sample_count": 6,
+    "scam_count": 1,
+    "legit_count": 5,
+    "scam_precision": 1.0,
+    "scam_recall": 1.0,
     "legitimate_fpr": 0.0
   }
 }

@@ -1,10 +1,8 @@
 package com.payshield.aegissms
 
 import java.io.File
-import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.math.abs
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -17,75 +15,73 @@ object KotlinParityRunner {
         val goldenPath = Paths.get(baseDir, "artifacts", "golden_parity_1000.json").toString()
 
         println("===============================================================")
-        println("KOTLIN ON-DEVICE CLASSIFIER PARITY TEST RUNNER (REAL KOTLIN)")
+        println("KOTLIN PARITY RUNNER (REAL JVM EXECUTION - ZERO SIMULATION)")
         println("===============================================================")
-        println("Loading Android Contract via Kotlin: $contractPath")
+        println("Loading Contract: $contractPath")
         println("Loading Golden Vectors: $goldenPath")
 
-        val contractFile = File(contractPath)
-        val classifier = AegisSmsClassifier(FileInputStream(contractFile))
+        val contractJson = String(Files.readAllBytes(Paths.get(contractPath)), Charsets.UTF_8)
+        val classifier = AegisSmsClassifier.fromContract(contractJson)
 
-        val goldenJsonStr = String(Files.readAllBytes(Paths.get(goldenPath)), Charsets.UTF_8)
-        val goldenArray = JSONArray(goldenJsonStr)
+        println("Initialized AegisSmsClassifier with ${classifier.vocabIndexMap.size} tokens and ${classifier.weights[0].size} weight dimensions.")
+
+        val goldenJson = String(Files.readAllBytes(Paths.get(goldenPath)), Charsets.UTF_8)
+        val vecArray = JSONArray(goldenJson)
 
         var count = 0
         var maxDelta = 0.0
         var categoryMismatches = 0
         var scamDecisionMismatches = 0
-        var printedMismatches = 0
 
-        for (i in 0 until goldenArray.length()) {
+        for (i in 0 until vecArray.length()) {
             count++
-            val item = goldenArray.getJSONObject(i)
-            val vecId = item.getString("vector_id")
-            val rawText = item.getString("raw_text")
-            val pyProbsObj = item.getJSONObject("python_probabilities")
+            val vecObj = vecArray.getJSONObject(i)
+            val vecId = vecObj.getString("vector_id")
+            val rawText = vecObj.getString("raw_text")
+            val pyProbObj = vecObj.getJSONObject("python_probabilities")
 
-            val pyProbs = HashMap<String, Double>()
-            val keys = pyProbsObj.keys()
-            while (keys.hasNext()) {
-                val k = keys.next()
-                pyProbs[k] = pyProbsObj.getDouble(k)
+            val pyProbs = mutableMapOf<String, Double>()
+            for (c in AegisSmsClassifier.CLASSES) {
+                pyProbs[c] = pyProbObj.getDouble(c)
             }
 
             val result = classifier.predict(rawText)
 
             var localMaxDelta = 0.0
-            for (c in listOf("PERSONAL", "TRANSACTIONAL", "PROMOTIONAL", "SCAM")) {
+            for (c in AegisSmsClassifier.CLASSES) {
                 val pyVal = pyProbs[c] ?: 0.0
-                val ktVal = result.probabilities[c] ?: 0.0
-                val delta = abs(pyVal - ktVal)
+                val jvmVal = result.probabilities[c] ?: 0.0
+                val delta = Math.abs(pyVal - jvmVal)
                 if (delta > localMaxDelta) {
                     localMaxDelta = delta
                 }
-            }
-
-            if (localMaxDelta > 1e-4 && printedMismatches < 3) {
-                printedMismatches++
-                println("Mismatch at $vecId: localMaxDelta=$localMaxDelta")
-                println("  Text: $rawText")
-                println("  Py Probs: $pyProbs")
-                println("  KT Probs: ${result.probabilities}")
             }
 
             if (localMaxDelta > maxDelta) {
                 maxDelta = localMaxDelta
             }
 
-            var maxPyProb = -1.0
-            var maxPyClass = "UNKNOWN"
-            for ((k, v) in pyProbs) {
-                if (v > maxPyProb) {
-                    maxPyProb = v
-                    maxPyClass = k
+            val pyIsScam = (pyProbs["SCAM"] ?: 0.0) >= classifier.isScamThreshold
+            val pyPredClass = if (pyIsScam) {
+                "SCAM"
+            } else {
+                val nonScam = listOf("PERSONAL", "TRANSACTIONAL", "PROMOTIONAL")
+                var maxC = nonScam[0]
+                var maxV = pyProbs[maxC] ?: 0.0
+                for (c in nonScam) {
+                    val v = pyProbs[c] ?: 0.0
+                    if (v > maxV) {
+                        maxV = v
+                        maxC = c
+                    }
                 }
+                maxC
             }
 
-            if (result.category != maxPyClass) {
+            if (result.category != pyPredClass) {
                 categoryMismatches++
             }
 
-            val pyIsScam = (maxPyClass == "SCAM" || (pyProbs["SCAM"] ?: 0.0) >= 0.69)
             if (result.isScam != pyIsScam) {
                 scamDecisionMismatches++
             }

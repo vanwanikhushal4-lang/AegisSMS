@@ -17,16 +17,21 @@ public class AegisSmsClassifier {
     public static final String[] CLASSES = new String[]{"PERSONAL", "TRANSACTIONAL", "PROMOTIONAL", "SCAM"};
 
     private static final Pattern ZERO_WIDTH_RE = Pattern.compile("[\u200B-\u200D\uFEFF\uFFFD\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F]");
+    private static final Pattern ACCOUNT_RE = Pattern.compile("\\b(?:a/c|ac|account\\s*ending\\s*in|account|card\\s*ending\\s*in|card\\s*ending|card|ending\\s*in|ending)\\s*(?:no\\.?|num|number)?\\s*[:#.]*\\s*([xX0-9]{3,18})\\b", Pattern.CASE_INSENSITIVE);
     private static final Pattern VPA_RE = Pattern.compile("([a-zA-Z0-9.\\-_]{2,256}@[a-zA-Z]{2,64})", Pattern.CASE_INSENSITIVE);
-    private static final Pattern URL_RE = Pattern.compile("(https?://\\S+|www\\.\\S+|[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}(?:/\\S*)?)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern REF_RE = Pattern.compile("\\b(?:upi\\s*(?:reference|ref|txn)?|reference|ref|utr|awb|pnr|order|txn|rrn|crn|id)\\s*(?:no\\.?|num|number)?\\s*[:#.]*\\s*([a-zA-Z0-9]{6,20})\\b", Pattern.CASE_INSENSITIVE);
+    private static final Pattern URL_RE = Pattern.compile(
+        "(https?://\\S+|www\\.\\S+|\\b[a-zA-Z0-9-]+\\.(?:com|org|net|in|co|co\\.in|gov|gov\\.in|edu|edu\\.in|io|ai|me|info|biz|link|site|top|xyz|club|live|shop|store|online|vip|app|apk|ly|gd|gl|cc|to|is|tv|uk|co\\.uk)(?:/[^\\s]*)?)",
+        Pattern.CASE_INSENSITIVE
+    );
     private static final Pattern PHONE_RE = Pattern.compile("(\\+?\\d[\\d\\- ]{7,}\\d)");
     private static final Pattern CURRENCY_RE = Pattern.compile("(?:rs\\.?|inr|₹|\\$|£|eur)\\s*[\\d,]+(?:\\.\\d{1,2})?", Pattern.CASE_INSENSITIVE);
     private static final Pattern URGENCY_RE = Pattern.compile(
-        "\\b(urgent|immediately|action required|blocked|suspended|disconnect|cut off|expire|limited time|hours left|last chance|hurry|final notice|alert|warning|threat|coercive|विद्युत|तातडीने|लगेच|सावध|तुरंत|काट दिया)\\b",
+        "\\b(urgent|immediately|action required|avoid suspension|account.*locked|account.*blocked.*update|disconnect tonight|cut off tonight|expire.*hours|limited time|hours left|last chance|hurry|final notice|threat|coercive|विद्युत खंडित|तातडीने|लगेच कॉल|तुरंत कॉल|काट दिया)\\b",
         Pattern.CASE_INSENSITIVE
     );
     private static final Pattern SENSITIVE_INFO_RE = Pattern.compile(
-        "\\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|account blocked|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी|खाते ब्लॉक)\\b",
+        "\\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी)\\b",
         Pattern.CASE_INSENSITIVE
     );
     private static final Pattern REFUND_SCAM_RE = Pattern.compile(
@@ -81,13 +86,25 @@ public class AegisSmsClassifier {
         return (double) count;
     }
 
+    public static String deidentifyText(String text) {
+        String t = Normalizer.normalize(text != null ? text : "", Normalizer.Form.NFC);
+        t = ZERO_WIDTH_RE.matcher(t).replaceAll("");
+        t = Pattern.compile("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b").matcher(t).replaceAll("<EMAIL>");
+        t = VPA_RE.matcher(t).replaceAll("<VPA>");
+        t = ACCOUNT_RE.matcher(t).replaceAll("A/c <ACCT>");
+        t = REF_RE.matcher(t).replaceAll("Ref <REF>");
+        t = PHONE_RE.matcher(t).replaceAll("<PHONE>");
+        return t;
+    }
+
     public static Object[] cleanAndFeaturize(String text) {
-        String rawNorm = Normalizer.normalize(text != null ? text : "", Normalizer.Form.NFC);
-        rawNorm = ZERO_WIDTH_RE.matcher(rawNorm).replaceAll("");
+        String rawNorm = deidentifyText(text);
         double charLen = (double) rawNorm.length();
 
-        double hasUrl = URL_RE.matcher(rawNorm).find() ? 1.0 : 0.0;
-        double hasPhone = PHONE_RE.matcher(rawNorm).find() ? 1.0 : 0.0;
+        String vpaMasked = VPA_RE.matcher(rawNorm).replaceAll(" upivpa ");
+
+        double hasUrl = URL_RE.matcher(vpaMasked).find() ? 1.0 : 0.0;
+        double hasPhone = PHONE_RE.matcher(vpaMasked).find() ? 1.0 : 0.0;
         double currencyCount = countMatches(CURRENCY_RE.matcher(rawNorm));
         double urgencyCount = countMatches(URGENCY_RE.matcher(rawNorm));
         double sensitiveCount = countMatches(SENSITIVE_INFO_RE.matcher(rawNorm));
@@ -106,8 +123,7 @@ public class AegisSmsClassifier {
         double digitRatio = charLen > 0 ? (double) digitCount / charLen : 0.0;
         double specialRatio = charLen > 0 ? (double) specialCount / charLen : 0.0;
 
-        String cleaned = rawNorm;
-        cleaned = VPA_RE.matcher(cleaned).replaceAll(" upivpa ");
+        String cleaned = vpaMasked;
 
         Matcher urlMatcher = URL_RE.matcher(cleaned);
         StringBuffer sb = new StringBuffer();
@@ -220,20 +236,25 @@ public class AegisSmsClassifier {
             probs[i] = expLogits[i] / sumExp;
         }
 
-        // 5. Decision
-        int maxIdx = 0;
-        for (int i = 1; i < 4; i++) {
-            if (probs[i] > probs[maxIdx]) maxIdx = i;
+        // 5. Calibrated Unified Decision
+        boolean isScam = probs[3] >= isScamThreshold;
+        String predLabel;
+        if (isScam) {
+            predLabel = "SCAM";
+        } else {
+            int nonScamMaxIdx = 0;
+            for (int i = 1; i <= 2; i++) {
+                if (probs[i] > probs[nonScamMaxIdx]) nonScamMaxIdx = i;
+            }
+            predLabel = CLASSES[nonScamMaxIdx];
         }
-
-        String predLabel = CLASSES[maxIdx];
-        boolean isScam = predLabel.equals("SCAM") || probs[3] >= isScamThreshold;
 
         Map<String, Double> probMap = new LinkedHashMap<>();
         for (int i = 0; i < 4; i++) {
             probMap.put(CLASSES[i], probs[i]);
         }
 
-        return new PredictionResult(predLabel, isScam, probs[maxIdx], probMap);
+        double confidence = isScam ? probs[3] : probs[Arrays.asList(CLASSES).indexOf(predLabel)];
+        return new PredictionResult(predLabel, isScam, confidence, probMap);
     }
 }

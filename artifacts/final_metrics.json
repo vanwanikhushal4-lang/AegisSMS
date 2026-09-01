@@ -1,17 +1,22 @@
 {
   "model_version": "2.3.0-P5-PROD",
   "evaluation_type": "Blind Template-Family Isolated Holdout Split",
-  "total_test_samples": 2123,
+  "total_test_samples": 744,
   "is_scam_operating_threshold": 0.69,
   "metrics": {
-    "overall_accuracy": 0.9689,
-    "scam_precision": 0.9961,
-    "scam_recall": 0.9884,
-    "legitimate_fpr": 0.0012,
-    "true_positives": 510,
-    "false_positives": 2,
-    "false_negatives": 6,
-    "true_negatives": 1605
+    "overall_accuracy": 0.879,
+    "scam_precision": 0.9492,
+    "scam_recall": 0.7368,
+    "legitimate_fpr": 0.0045,
+    "true_positives": 56,
+    "false_positives": 3,
+    "false_negatives": 20,
+    "true_negatives": 665
+  },
+  "hard_negative_metrics": {
+    "total_hard_negatives": 500,
+    "false_positives": 0,
+    "false_positive_rate": 0.0
   },
   "confusion_matrix_4way": {
     "labels": [
@@ -22,28 +27,28 @@
     ],
     "matrix": [
       [
-        797,
-        3,
-        1,
-        1
-      ],
-      [
-        51,
-        645,
+        492,
+        17,
         1,
         0
       ],
       [
-        1,
-        1,
-        105,
-        1
+        37,
+        76,
+        2,
+        0
       ],
       [
-        5,
-        1,
-        0,
-        510
+        7,
+        3,
+        30,
+        3
+      ],
+      [
+        4,
+        4,
+        12,
+        56
       ]
     ]
   }

@@ -1,0 +1,483 @@
+{
+  "model_version": "2.3.0-P5-PROD",
+  "calibrated_operating_threshold": 0.69,
+  "calibration_summary": {
+    "expected_calibration_error_ece": 0.0184,
+    "maximum_calibration_error_mce": 0.2191,
+    "operating_threshold_hard_negative_fpr": 0.0,
+    "operating_threshold_test_legit_fpr": 0.0045,
+    "operating_threshold_scam_recall": 0.7368,
+    "operating_threshold_scam_precision": 0.9492
+  },
+  "binned_calibration_table": [
+    {
+      "bin": 1,
+      "range": "[0.0, 0.1)",
+      "sample_count": 639,
+      "mean_predicted_probability": 0.0134,
+      "empirical_scam_fraction": 0.0047,
+      "calibration_gap": 0.0087
+    },
+    {
+      "bin": 2,
+      "range": "[0.1, 0.2)",
+      "sample_count": 13,
+      "mean_predicted_probability": 0.1504,
+      "empirical_scam_fraction": 0.0769,
+      "calibration_gap": 0.0735
+    },
+    {
+      "bin": 3,
+      "range": "[0.2, 0.3)",
+      "sample_count": 10,
+      "mean_predicted_probability": 0.2446,
+      "empirical_scam_fraction": 0.2,
+      "calibration_gap": 0.0446
+    },
+    {
+      "bin": 4,
+      "range": "[0.3, 0.4)",
+      "sample_count": 6,
+      "mean_predicted_probability": 0.3515,
+      "empirical_scam_fraction": 0.3333,
+      "calibration_gap": 0.0182
+    },
+    {
+      "bin": 5,
+      "range": "[0.4, 0.5)",
+      "sample_count": 9,
+      "mean_predicted_probability": 0.4476,
+      "empirical_scam_fraction": 0.6667,
+      "calibration_gap": 0.2191
+    },
+    {
+      "bin": 6,
+      "range": "[0.5, 0.6)",
+      "sample_count": 4,
+      "mean_predicted_probability": 0.5506,
+      "empirical_scam_fraction": 0.75,
+      "calibration_gap": 0.1994
+    },
+    {
+      "bin": 7,
+      "range": "[0.6, 0.7)",
+      "sample_count": 4,
+      "mean_predicted_probability": 0.6494,
+      "empirical_scam_fraction": 0.75,
+      "calibration_gap": 0.1006
+    },
+    {
+      "bin": 8,
+      "range": "[0.7, 0.8)",
+      "sample_count": 11,
+      "mean_predicted_probability": 0.7553,
+      "empirical_scam_fraction": 0.7273,
+      "calibration_gap": 0.0281
+    },
+    {
+      "bin": 9,
+      "range": "[0.8, 0.9)",
+      "sample_count": 11,
+      "mean_predicted_probability": 0.8442,
+      "empirical_scam_fraction": 1.0,
+      "calibration_gap": 0.1558
+    },
+    {
+      "bin": 10,
+      "range": "[0.9, 1.0)",
+      "sample_count": 37,
+      "mean_predicted_probability": 0.9623,
+      "empirical_scam_fraction": 1.0,
+      "calibration_gap": 0.0377
+    }
+  ],
+  "threshold_operating_characteristic_sweep": [
+    {
+      "threshold": 0.1,
+      "scam_precision": 0.6952,
+      "scam_recall": 0.9605,
+      "scam_f1": 0.8066,
+      "test_legitimate_fpr": 0.0479,
+      "hard_negative_fpr": 0.076,
+      "hard_negative_false_positives": 38
+    },
+    {
+      "threshold": 0.1202,
+      "scam_precision": 0.7087,
+      "scam_recall": 0.9605,
+      "scam_f1": 0.8156,
+      "test_legitimate_fpr": 0.0449,
+      "hard_negative_fpr": 0.056,
+      "hard_negative_false_positives": 28
+    },
+    {
+      "threshold": 0.1405,
+      "scam_precision": 0.7228,
+      "scam_recall": 0.9605,
+      "scam_f1": 0.8249,
+      "test_legitimate_fpr": 0.0419,
+      "hard_negative_fpr": 0.056,
+      "hard_negative_false_positives": 28
+    },
+    {
+      "threshold": 0.1607,
+      "scam_precision": 0.7449,
+      "scam_recall": 0.9605,
+      "scam_f1": 0.8391,
+      "test_legitimate_fpr": 0.0374,
+      "hard_negative_fpr": 0.056,
+      "hard_negative_false_positives": 28
+    },
+    {
+      "threshold": 0.181,
+      "scam_precision": 0.7849,
+      "scam_recall": 0.9605,
+      "scam_f1": 0.8639,
+      "test_legitimate_fpr": 0.0299,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.2012,
+      "scam_precision": 0.7826,
+      "scam_recall": 0.9474,
+      "scam_f1": 0.8571,
+      "test_legitimate_fpr": 0.0299,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.2214,
+      "scam_precision": 0.809,
+      "scam_recall": 0.9474,
+      "scam_f1": 0.8727,
+      "test_legitimate_fpr": 0.0254,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.2417,
+      "scam_precision": 0.8256,
+      "scam_recall": 0.9342,
+      "scam_f1": 0.8765,
+      "test_legitimate_fpr": 0.0225,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.2619,
+      "scam_precision": 0.8256,
+      "scam_recall": 0.9342,
+      "scam_f1": 0.8765,
+      "test_legitimate_fpr": 0.0225,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.2821,
+      "scam_precision": 0.8434,
+      "scam_recall": 0.9211,
+      "scam_f1": 0.8805,
+      "test_legitimate_fpr": 0.0195,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.3024,
+      "scam_precision": 0.8537,
+      "scam_recall": 0.9211,
+      "scam_f1": 0.8861,
+      "test_legitimate_fpr": 0.018,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.3226,
+      "scam_precision": 0.8537,
+      "scam_recall": 0.9211,
+      "scam_f1": 0.8861,
+      "test_legitimate_fpr": 0.018,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.3429,
+      "scam_precision": 0.85,
+      "scam_recall": 0.8947,
+      "scam_f1": 0.8718,
+      "test_legitimate_fpr": 0.018,
+      "hard_negative_fpr": 0.036,
+      "hard_negative_false_positives": 18
+    },
+    {
+      "threshold": 0.3631,
+      "scam_precision": 0.8831,
+      "scam_recall": 0.8947,
+      "scam_f1": 0.8889,
+      "test_legitimate_fpr": 0.0135,
+      "hard_negative_fpr": 0.026,
+      "hard_negative_false_positives": 13
+    },
+    {
+      "threshold": 0.3833,
+      "scam_precision": 0.8947,
+      "scam_recall": 0.8947,
+      "scam_f1": 0.8947,
+      "test_legitimate_fpr": 0.012,
+      "hard_negative_fpr": 0.016,
+      "hard_negative_false_positives": 8
+    },
+    {
+      "threshold": 0.4036,
+      "scam_precision": 0.8947,
+      "scam_recall": 0.8947,
+      "scam_f1": 0.8947,
+      "test_legitimate_fpr": 0.012,
+      "hard_negative_fpr": 0.016,
+      "hard_negative_false_positives": 8
+    },
+    {
+      "threshold": 0.4238,
+      "scam_precision": 0.9028,
+      "scam_recall": 0.8553,
+      "scam_f1": 0.8784,
+      "test_legitimate_fpr": 0.0105,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.444,
+      "scam_precision": 0.9014,
+      "scam_recall": 0.8421,
+      "scam_f1": 0.8707,
+      "test_legitimate_fpr": 0.0105,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.4643,
+      "scam_precision": 0.9143,
+      "scam_recall": 0.8421,
+      "scam_f1": 0.8767,
+      "test_legitimate_fpr": 0.009,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.4845,
+      "scam_precision": 0.9143,
+      "scam_recall": 0.8421,
+      "scam_f1": 0.8767,
+      "test_legitimate_fpr": 0.009,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.5048,
+      "scam_precision": 0.9254,
+      "scam_recall": 0.8158,
+      "scam_f1": 0.8671,
+      "test_legitimate_fpr": 0.0075,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.525,
+      "scam_precision": 0.9242,
+      "scam_recall": 0.8026,
+      "scam_f1": 0.8592,
+      "test_legitimate_fpr": 0.0075,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.5452,
+      "scam_precision": 0.9242,
+      "scam_recall": 0.8026,
+      "scam_f1": 0.8592,
+      "test_legitimate_fpr": 0.0075,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.5655,
+      "scam_precision": 0.9365,
+      "scam_recall": 0.7763,
+      "scam_f1": 0.8489,
+      "test_legitimate_fpr": 0.006,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.5857,
+      "scam_precision": 0.9365,
+      "scam_recall": 0.7763,
+      "scam_f1": 0.8489,
+      "test_legitimate_fpr": 0.006,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.606,
+      "scam_precision": 0.9365,
+      "scam_recall": 0.7763,
+      "scam_f1": 0.8489,
+      "test_legitimate_fpr": 0.006,
+      "hard_negative_fpr": 0.008,
+      "hard_negative_false_positives": 4
+    },
+    {
+      "threshold": 0.6262,
+      "scam_precision": 0.9516,
+      "scam_recall": 0.7763,
+      "scam_f1": 0.8551,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.6464,
+      "scam_precision": 0.9516,
+      "scam_recall": 0.7763,
+      "scam_f1": 0.8551,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.6667,
+      "scam_precision": 0.95,
+      "scam_recall": 0.75,
+      "scam_f1": 0.8382,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.6869,
+      "scam_precision": 0.9492,
+      "scam_recall": 0.7368,
+      "scam_f1": 0.8296,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.7071,
+      "scam_precision": 0.9483,
+      "scam_recall": 0.7237,
+      "scam_f1": 0.8209,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.7274,
+      "scam_precision": 0.9464,
+      "scam_recall": 0.6974,
+      "scam_f1": 0.803,
+      "test_legitimate_fpr": 0.0045,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.7476,
+      "scam_precision": 0.9815,
+      "scam_recall": 0.6974,
+      "scam_f1": 0.8154,
+      "test_legitimate_fpr": 0.0015,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.7679,
+      "scam_precision": 1.0,
+      "scam_recall": 0.6974,
+      "scam_f1": 0.8217,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.7881,
+      "scam_precision": 1.0,
+      "scam_recall": 0.6711,
+      "scam_f1": 0.8031,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.8083,
+      "scam_precision": 1.0,
+      "scam_recall": 0.6184,
+      "scam_f1": 0.7642,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.8286,
+      "scam_precision": 1.0,
+      "scam_recall": 0.5921,
+      "scam_f1": 0.7438,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.8488,
+      "scam_precision": 1.0,
+      "scam_recall": 0.5263,
+      "scam_f1": 0.6897,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.869,
+      "scam_precision": 1.0,
+      "scam_recall": 0.5263,
+      "scam_f1": 0.6897,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.8893,
+      "scam_precision": 1.0,
+      "scam_recall": 0.4868,
+      "scam_f1": 0.6549,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.9095,
+      "scam_precision": 1.0,
+      "scam_recall": 0.4868,
+      "scam_f1": 0.6549,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.9298,
+      "scam_precision": 1.0,
+      "scam_recall": 0.4342,
+      "scam_f1": 0.6055,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    },
+    {
+      "threshold": 0.95,
+      "scam_precision": 1.0,
+      "scam_recall": 0.3158,
+      "scam_f1": 0.48,
+      "test_legitimate_fpr": 0.0,
+      "hard_negative_fpr": 0.0,
+      "hard_negative_false_positives": 0
+    }
+  ]
+}

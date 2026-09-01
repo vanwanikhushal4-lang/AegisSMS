@@ -52,17 +52,22 @@ def predict_single(text: str) -> Dict[str, Any]:
     x_fused = sp.hstack([x_t, sp.csr_matrix(s_num.reshape(1, -1))], format="csr")
 
     probs = clf.predict_proba(x_fused)[0]
-    pred_id = int(np.argmax(probs))
-    pred_label = ID_TO_LABEL[pred_id]
-
-    # Single Uniform Operating Decision Rule
-    is_scam = bool(pred_label == "SCAM" or probs[3] >= IS_SCAM_THRESHOLD)
+    
+    # Unified Calibrated Decision Rule
+    is_scam = bool(probs[3] >= IS_SCAM_THRESHOLD)
+    if is_scam:
+        pred_label = "SCAM"
+        confidence = float(round(probs[3], 4))
+    else:
+        non_scam_idx = int(np.argmax(probs[:3]))
+        pred_label = ID_TO_LABEL[non_scam_idx]
+        confidence = float(round(probs[non_scam_idx], 4))
 
     return {
         "text": text,
         "category": pred_label,
         "is_scam": is_scam,
-        "confidence": float(round(probs[pred_id], 4)),
+        "confidence": confidence,
         "operating_threshold": IS_SCAM_THRESHOLD,
         "probabilities": {
             "PERSONAL": float(round(probs[0], 4)),

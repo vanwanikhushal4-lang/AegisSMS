@@ -36,20 +36,24 @@ ZERO_WIDTH_RE = re.compile(r"[\u200B-\u200D\uFEFF\uFFFD\x00-\x08\x0b\x0c\x0e-\x1
 PHONE_PII_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
 EMAIL_PII_RE = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
 VPA_RE = re.compile(r"([a-zA-Z0-9.\-_]{2,256}@[a-zA-Z]{2,64})", re.IGNORECASE)
-ACCOUNT_PII_RE = re.compile(r"\b(?:a/c|ac|account)\s*(?:no\.?)?\s*([xX0-9]{3,18})\b", re.IGNORECASE)
-REF_PII_RE = re.compile(r"\b(?:ref|utr|awb|pnr|order|id)\s*#?\s*([a-zA-Z0-9]{6,20})\b", re.IGNORECASE)
+ACCOUNT_PII_RE = re.compile(r"\b(?:a/c|ac|account\s*ending\s*in|account|card\s*ending\s*in|card\s*ending|card|ending\s*in|ending)\s*(?:no\.?|num|number)?\s*[:#.]*\s*([xX0-9]{3,18})\b", re.IGNORECASE)
+REF_PII_RE = re.compile(r"\b(?:upi\s*(?:reference|ref|txn)?|reference|ref|utr|awb|pnr|order|txn|rrn|crn|id)\s*(?:no\.?|num|number)?\s*[:#.]*\s*([a-zA-Z0-9]{6,20})\b", re.IGNORECASE)
 OTP_PII_RE = re.compile(r"\b(\d{4,8})\b")
 
 # Feature Patterns
-URL_RE = re.compile(r"(https?://\S+|www\.\S+|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/\S*)?)", re.IGNORECASE)
+REF_RE = re.compile(r"\b(?:upi\s*(?:reference|ref|txn)?|reference|ref|utr|awb|pnr|order|txn|rrn|crn|id)\s*(?:no\.?|num|number)?\s*[:#.]*\s*([a-zA-Z0-9]{6,20})\b", re.IGNORECASE)
+URL_RE = re.compile(
+    r"(https?://\S+|www\.\S+|\b[a-zA-Z0-9-]+\.(?:com|org|net|in|co|co\.in|gov|gov\.in|edu|edu\.in|io|ai|me|info|biz|link|site|top|xyz|club|live|shop|store|online|vip|app|apk|ly|gd|gl|cc|to|is|tv|uk|co\.uk)(?:/[^\s]*)?)",
+    re.IGNORECASE
+)
 PHONE_RE = re.compile(r"(\+?\d[\d\- ]{7,}\d)")
 CURRENCY_RE = re.compile(r"(?:rs\.?|inr|₹|\$|£|eur)\s*[\d,]+(?:\.\d{1,2})?", re.IGNORECASE)
 URGENCY_RE = re.compile(
-    r"\b(urgent|immediately|action required|blocked|suspended|disconnect|cut off|expire|limited time|hours left|last chance|hurry|final notice|alert|warning|threat|coercive|विद्युत|तातडीने|लगेच|सावध|तुरंत|काट दिया)\b",
+    r"\b(urgent|immediately|action required|avoid suspension|account.*locked|account.*blocked.*update|disconnect tonight|cut off tonight|expire.*hours|limited time|hours left|last chance|hurry|final notice|threat|coercive|विद्युत खंडित|तातडीने|लगेच कॉल|तुरंत कॉल|काट दिया)\b",
     re.IGNORECASE
 )
 SENSITIVE_INFO_RE = re.compile(
-    r"\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|account blocked|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी|खाते ब्लॉक)\b",
+    r"\b(otp|pin|password|cvv|aadhaar|pan card|kyc|verify details|login to verify|credit card|update kyc|केवायसी|पॅन कार्ड|आधार|ओटीपी)\b",
     re.IGNORECASE
 )
 REFUND_SCAM_RE = re.compile(
@@ -89,13 +93,15 @@ def deidentify_text(text: str) -> str:
 def clean_and_featurize(text: str) -> Tuple[str, Dict[str, float]]:
     """
     Cleans raw SMS text, expands tokens, and computes the exact 11 numeric features.
+    Integrates de-identification so account/reference IDs normalize to ACCT/REF.
     """
-    raw_norm = normalize_unicode(text)
+    raw_norm = deidentify_text(text)
     char_len = float(len(raw_norm))
 
-    # Compute numeric features prior to masking
-    has_url = 1.0 if URL_RE.search(raw_norm) else 0.0
-    has_phone = 1.0 if PHONE_RE.search(raw_norm) else 0.0
+    vpa_masked = VPA_RE.sub(" upivpa ", raw_norm)
+
+    has_url = 1.0 if URL_RE.search(vpa_masked) else 0.0
+    has_phone = 1.0 if PHONE_RE.search(vpa_masked) else 0.0
     currency_count = float(len(CURRENCY_RE.findall(raw_norm)))
     urgency_count = float(len(URGENCY_RE.findall(raw_norm)))
     sensitive_info_count = float(len(SENSITIVE_INFO_RE.findall(raw_norm)))
@@ -110,28 +116,20 @@ def clean_and_featurize(text: str) -> Tuple[str, Dict[str, float]]:
     special_ratio = (special_count / char_len) if char_len > 0 else 0.0
 
     # Clean text transformation for vectorizer
-    cleaned = raw_norm
+    cleaned = vpa_masked
 
-    # 1. Mask VPAs before URLs
-    cleaned = VPA_RE.sub(" upivpa ", cleaned)
-
-    # 2. Extract and expand domain words from URLs
+    # Extract and expand domain words from URLs
     def url_replacer(match):
         url = match.group(0)
         parts = re.split(r"[/._\-:=?&%]", url)
         words = [p.lower() for p in parts if len(p) > 1 and not p.isdigit()]
-        return " httpurl " + " ".join(words) + " "
+        return f" httpurl {' '.join(words)} "
 
     cleaned = URL_RE.sub(url_replacer, cleaned)
-
-    # 3. Replace phone numbers
     cleaned = PHONE_RE.sub(" phonenumber ", cleaned)
-
-    # 4. Standardize punctuation to spaces for multilingual word alignment
     cleaned = PUNCT_RE.sub(" ", cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
 
-    # Word count from cleaned space-separated tokens
     words = [w for w in cleaned.lower().split() if w]
     word_count = float(len(words))
 
