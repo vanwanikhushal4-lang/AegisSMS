@@ -2,9 +2,10 @@ name: AegisSMS CI Quality Gates
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "fix/**", "feat/**" ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
